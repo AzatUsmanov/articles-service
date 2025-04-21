@@ -1,9 +1,12 @@
 package pet.db.jdbc.service;
 
 import jakarta.annotation.Nullable;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
+
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.repository.ArticleRepository;
 import pet.db.jdbc.repository.AuthorshipOfArticleRepository;

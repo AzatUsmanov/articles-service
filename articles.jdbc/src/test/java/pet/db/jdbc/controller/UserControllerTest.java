@@ -2,9 +2,11 @@ package pet.db.jdbc.controller;
 
 
 import jakarta.servlet.ServletException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,28 +16,27 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
 import pet.db.jdbc.controller.payload.UserPayload;
 import pet.db.jdbc.entity.Article;
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.service.ArticleService;
-import pet.db.jdbc.service.RegistrationService;
-import pet.db.jdbc.service.UserService;
-import pet.db.jdbc.tool.AuthenticationDetailsProducer;
+import pet.db.jdbc.tool.producer.AuthenticationDetailsProducer;
 import pet.db.jdbc.tool.db.DbCleaner;
 import pet.db.jdbc.tool.generator.TestDataGenerator;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,30 +44,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.ErrorMessages.DUPLICATE_FIELD;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.ErrorMessages.VALIDATION_FIELD;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.Fields.EMAIL;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.Fields.USERNAME;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.ERROR;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.FIELD;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.FIELD_ERRORS;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.ID;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.LENGTH;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.PATH;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 public class UserControllerTest {
 
-    public static class UserTestConstants {
-        public static final String USERS_PATH = "/api/users";
-        public static final String USERS_PATH_ID = "/api/users/%d";
-        public static final String USERS_AUTHORSHIP_ID_PATH = "/api/users/authorship/%d";
+    public static final String USERS_PATH = "/api/users";
 
-        public static class Fields {
-            public static final String USERNAME = "username";
-            public static final String EMAIL = "email";
-            public static final String PASSWORD = "password";
-            public static final String ROLE = "role";
-        }
+    public static final String USERS_ID_PATH = "/api/users/%d";
 
-        public static class JsonPaths {
-            public static final String ID = "$.id";
-            public static final String USERNAME = "$.username";
-            public static final String EMAIL = "$.email";
-            public static final String ROLE = "$.role";
-        }
-    }
+    public static final String USERS_AUTHORSHIP_ID_PATH = "/api/users/authorship/%d";
 
     @Autowired
     private MockMvc mockMvc;
@@ -95,14 +93,12 @@ public class UserControllerTest {
     @Autowired
     private TestDataGenerator<Article> articleTestDataGenerator;
 
-    @Autowired
-    private AuthenticationDetailsProducer authenticationDetailsProducer;
 
     @Autowired
     private Converter<User, UserDetails> userToUserDetailsConverter;
 
     @Autowired
-    private AuthenticationDetailsProducer authenticationDataGenerator;
+    private AuthenticationDetailsProducer authenticationDetailsProducer;
 
     private UserDetails registeredUser;
 
@@ -110,8 +106,8 @@ public class UserControllerTest {
 
     @BeforeEach
     public void initAuthenticationDetails() {
-        registeredUser = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(User.Role.ROLE_USER);
-        registeredAdmin = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(User.Role.ROLE_ADMIN);
+        registeredUser = authenticationDetailsProducer.produceUserDetailsOfRegisteredUser(User.Role.ROLE_USER);
+        registeredAdmin = authenticationDetailsProducer.produceUserDetailsOfRegisteredUser(User.Role.ROLE_ADMIN);
     }
 
     @AfterEach
@@ -122,7 +118,7 @@ public class UserControllerTest {
     @Test
     public void createUser() throws Exception {
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = post(UserTestConstants.USERS_PATH)
+        var request = post(USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -130,7 +126,7 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isCreated(),
-                        jsonPath(UserTestConstants.JsonPaths.ID).isNumber()
+                        jsonPath(ID).isNumber()
                 ).andDo(result -> {
                     User user = getUserFromMvcResult(result);
                     assertTrue(isUserMatchesUserPayload(user, userPayload));
@@ -140,7 +136,7 @@ public class UserControllerTest {
     @Test
     public void createUserWithoutAccess() throws Exception {
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = post(UserTestConstants.USERS_PATH)
+        var request = post(USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -152,7 +148,7 @@ public class UserControllerTest {
     @Test
     public void createUserWithInvalidData() throws Exception {
         UserPayload userPayloadWithInvalidData = new UserPayload("", "", "", User.Role.ROLE_USER);
-        var request = post(UserTestConstants.USERS_PATH)
+        var request = post(USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayloadWithInvalidData).getJson());
@@ -160,8 +156,8 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isUnprocessableEntity(),
-                        jsonPath("$.error").value("validation_field"),
-                        jsonPath("$.field_errors").isString()
+                        jsonPath(ERROR).value(VALIDATION_FIELD),
+                        jsonPath(FIELD_ERRORS).isString()
                 );
     }
 
@@ -174,7 +170,7 @@ public class UserControllerTest {
                 unsavedUser.getEmail(),
                 unsavedUser.getPassword(),
                 unsavedUser.getRole());
-        var request = post(UserTestConstants.USERS_PATH)
+        var request = post(USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -183,8 +179,8 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isConflict(),
-                        jsonPath("$.error").value("duplicate_field"),
-                        jsonPath("$.field").value(UserTestConstants.Fields.USERNAME)
+                        jsonPath(ERROR).value(DUPLICATE_FIELD),
+                        jsonPath(FIELD).value(USERNAME)
                 );
     }
 
@@ -197,7 +193,7 @@ public class UserControllerTest {
                 savedUser.getEmail(),
                 unsavedUser.getPassword(),
                 unsavedUser.getRole());
-        var request = post(UserTestConstants.USERS_PATH)
+        var request = post(USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -205,8 +201,8 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isConflict(),
-                        jsonPath("$.error").value("duplicate_field"),
-                        jsonPath("$.field").value(UserTestConstants.Fields.EMAIL)
+                        jsonPath(ERROR).value(DUPLICATE_FIELD),
+                        jsonPath(FIELD).value(EMAIL)
                 );
     }
 
@@ -214,7 +210,7 @@ public class UserControllerTest {
     public void updateUserById() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -222,7 +218,7 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath(UserTestConstants.JsonPaths.ID).value(savedUser.getId())
+                        jsonPath(ID).value(savedUser.getId())
                 ).andDo(result -> {
                     User user = getUserFromMvcResult(result);
                     assertTrue(isUserMatchesUserPayload(user, userPayload));
@@ -231,10 +227,10 @@ public class UserControllerTest {
 
     @Test
     public void updateUserByIdViaTargetUser() throws Exception {
-        User savedUser = authenticationDataGenerator.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
+        User savedUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
         UserDetails targetUserDetails = userToUserDetailsConverter.convert(savedUser);
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(targetUserDetails)))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -242,7 +238,7 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath(UserTestConstants.JsonPaths.ID).value(savedUser.getId())
+                        jsonPath(ID).value(savedUser.getId())
                 ).andDo(result -> {
                     User user = getUserFromMvcResult(result);
                     assertTrue(isUserMatchesUserPayload(user, userPayload));
@@ -253,7 +249,7 @@ public class UserControllerTest {
     public void updateUserByIdWithoutAccess() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -272,7 +268,7 @@ public class UserControllerTest {
                 userDataForUpdate.getPassword(),
                 userDataForUpdate.getRole()
         );
-        var request = patch(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -280,7 +276,7 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath(UserTestConstants.JsonPaths.ID).value(savedUser.getId())
+                        jsonPath(ID).value(savedUser.getId())
                 ).andDo(result -> {
                     User user = getUserFromMvcResult(result);
                     assertTrue(isUserMatchesUserPayload(user, userPayload));
@@ -291,13 +287,12 @@ public class UserControllerTest {
     public void updateUserByNonExistentId() throws Exception {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(UserTestConstants.USERS_PATH_ID, unsavedUser.getId()))
+        var request = patch(String.format(USERS_ID_PATH, unsavedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
 
-        assertThatThrownBy(() -> mockMvc.perform(request))
-                .isInstanceOf(ServletException.class);
+        assertThrows(ServletException.class, () -> mockMvc.perform(request));
     }
 
     @Test
@@ -310,7 +305,7 @@ public class UserControllerTest {
                 userDataForUpdate.getEmail(),
                 userDataForUpdate.getPassword(),
                 userDataForUpdate.getRole());
-        var request = patch(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -318,8 +313,8 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isConflict(),
-                        jsonPath("$.error").value("duplicate_field"),
-                        jsonPath("$.field").value(UserTestConstants.Fields.USERNAME)
+                        jsonPath(ERROR).value(DUPLICATE_FIELD),
+                        jsonPath(FIELD).value(USERNAME)
                 );
     }
 
@@ -333,7 +328,7 @@ public class UserControllerTest {
                 anotherSavedUser.getEmail(),
                 userDataForUpdate.getPassword(),
                 userDataForUpdate.getRole());
-        var request = patch(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -341,15 +336,15 @@ public class UserControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isConflict(),
-                        jsonPath("$.error").value("duplicate_field"),
-                        jsonPath("$.field").value(UserTestConstants.Fields.EMAIL)
+                        jsonPath(ERROR).value(DUPLICATE_FIELD),
+                        jsonPath(FIELD).value(EMAIL)
                 );
     }
 
     @Test
     public void deleteUserById() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
-        var request = delete(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = delete(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -359,9 +354,9 @@ public class UserControllerTest {
 
     @Test
     public void deleteUserByIdViaTargetUser() throws Exception {
-        User savedUser = authenticationDataGenerator.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
+        User savedUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
         UserDetails targetUserDetails = userToUserDetailsConverter.convert(savedUser);
-        var request = delete(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = delete(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(targetUserDetails)));
 
@@ -372,7 +367,7 @@ public class UserControllerTest {
     @Test
     public void deleteUserByIdWithoutAccess() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
-        var request = delete(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = delete(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
@@ -383,7 +378,7 @@ public class UserControllerTest {
     @Test
     public void deleteUserByNonExistentId() throws Exception {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
-        var request = delete(String.format(UserTestConstants.USERS_PATH_ID, unsavedUser.getId()))
+        var request = delete(String.format(USERS_ID_PATH, unsavedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -394,14 +389,14 @@ public class UserControllerTest {
     @Test
     public void findUserById() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
-        var request = get(String.format(UserTestConstants.USERS_PATH_ID, savedUser.getId()))
+        var request = get(String.format(USERS_ID_PATH, savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath(UserTestConstants.JsonPaths.ID).value(savedUser.getId())
+                        jsonPath(ID).value(savedUser.getId())
                 ).andDo(result -> {
                     User user = getUserFromMvcResult(result);
                     assertEquals(savedUser, user);
@@ -411,7 +406,7 @@ public class UserControllerTest {
     @Test
     public void findUserByNonExistentId() throws Exception {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(UserTestConstants.USERS_PATH_ID, unsavedUser.getId()))
+        var request = get(String.format(USERS_ID_PATH, unsavedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
@@ -427,15 +422,15 @@ public class UserControllerTest {
                 .map(User::getId)
                 .toList();
         Article savedArticle = articleService.create(unsavedArticle, authorIds);
-        var request = get(String.format(UserTestConstants.USERS_AUTHORSHIP_ID_PATH, savedArticle.getId()))
+        var request = get(String.format(USERS_AUTHORSHIP_ID_PATH, savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$").isArray(),
-                        jsonPath("$.length()").value(authors.size())
+                        jsonPath(PATH).isArray(),
+                        jsonPath(LENGTH).value(authors.size())
                 ).andDo(result -> {
                     String content = result.getResponse().getContentAsString();
                     List<User> users = userListJsonTester.parseObject(content);
@@ -447,30 +442,29 @@ public class UserControllerTest {
     @Test
     public void findAuthorsByNonExistentArticleId() throws Exception {
         Article unsavedArticle = articleTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(UserTestConstants.USERS_AUTHORSHIP_ID_PATH, unsavedArticle.getId()))
+        var request = get(String.format(USERS_AUTHORSHIP_ID_PATH, unsavedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(registeredAdmin)));
 
-        assertThatThrownBy(() -> mockMvc.perform(request))
-                .isInstanceOf(ServletException.class);
+        assertThrows(ServletException.class, () -> mockMvc.perform(request));
     }
 
     @Test
     public void findAllUsers() throws Exception {
         cleanDb();
-        User registredUser = authenticationDataGenerator.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
+        User registredUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
         UserDetails UserDetails = userToUserDetailsConverter.convert(registredUser);
         List<User> allUsers = new ArrayList<>(userTestDataGenerator.generateSavedData(10));
         allUsers.add(registredUser);
-        var request = get(UserTestConstants.USERS_PATH)
+        var request = get(USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(UserDetails)));
 
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$").isArray(),
-                        jsonPath("$.length()").value(allUsers.size())
+                        jsonPath(PATH).isArray(),
+                        jsonPath(LENGTH).value(allUsers.size())
                 ).andDo(result -> {
                     String content = result.getResponse().getContentAsString();
                     List<User> responseUsers = userListJsonTester.parseObject(content);

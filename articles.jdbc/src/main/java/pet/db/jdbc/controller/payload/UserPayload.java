@@ -3,6 +3,7 @@ package pet.db.jdbc.controller.payload;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 import pet.db.jdbc.entity.User;
 
 public record UserPayload(

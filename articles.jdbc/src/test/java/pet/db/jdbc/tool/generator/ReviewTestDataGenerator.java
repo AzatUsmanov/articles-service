@@ -1,17 +1,18 @@
 package pet.db.jdbc.tool.generator;
 
 import lombok.RequiredArgsConstructor;
+
 import org.instancio.Instancio;
 import org.instancio.Select;
+
 import org.springframework.stereotype.Component;
+
 import pet.db.jdbc.controller.payload.ReviewPayload;
 import pet.db.jdbc.entity.Article;
 import pet.db.jdbc.entity.Review;
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.service.ReviewService;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 

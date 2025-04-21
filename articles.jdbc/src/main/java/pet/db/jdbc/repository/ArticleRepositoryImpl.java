@@ -1,7 +1,9 @@
 package pet.db.jdbc.repository;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Repository;
+
 import pet.db.jdbc.entity.Article;
 import pet.db.jdbc.util.SqlUtils;
 
@@ -11,11 +13,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor

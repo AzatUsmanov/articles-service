@@ -1,6 +1,7 @@
 package pet.db.jdbc.repository;
 
 import jakarta.validation.constraints.NotNull;
+
 import pet.db.jdbc.entity.AuthorshipOfArticle;
 
 import java.util.List;

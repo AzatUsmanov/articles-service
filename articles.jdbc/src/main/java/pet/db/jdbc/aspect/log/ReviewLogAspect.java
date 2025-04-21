@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import pet.db.jdbc.entity.Review;
 
-
 @Slf4j
 @Aspect
 @Component

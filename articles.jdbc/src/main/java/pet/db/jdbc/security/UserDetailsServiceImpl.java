@@ -1,17 +1,14 @@
 package pet.db.jdbc.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pet.db.jdbc.entity.Article;
-import pet.db.jdbc.repository.UserRepository;
+
 import pet.db.jdbc.service.UserService;
 import pet.db.jdbc.tool.converter.UserToUserDetailsConverter;
-
-import java.sql.SQLException;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userService
                 .findByUsername(username)
                 .map(userToUserDetailsConverter::convert)
-                .orElseThrow(() -> new UsernameNotFoundException("User with name \"" + username + "\" not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with username = %s not found", username)));
     }
 
 }

@@ -3,14 +3,11 @@ package pet.db.jdbc.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
 import pet.db.jdbc.controller.payload.NewArticlePayload;
 import pet.db.jdbc.controller.payload.UpdateArticlePayload;
 
-import java.io.Serializable;
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Data

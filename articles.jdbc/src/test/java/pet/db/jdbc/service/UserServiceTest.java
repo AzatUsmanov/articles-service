@@ -3,10 +3,11 @@ package pet.db.jdbc.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import pet.db.jdbc.entity.Article;
-import pet.db.jdbc.entity.AuthorshipOfArticle;
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.tool.db.DbCleaner;
 import pet.db.jdbc.tool.generator.TestDataGenerator;
@@ -14,14 +15,12 @@ import pet.db.jdbc.tool.exception.DuplicateUserException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -59,8 +58,7 @@ public class UserServiceTest {
         User userForSave = userTestDataGenerator.generateUnsavedData();
         userForSave.setUsername(null);
 
-        assertThatThrownBy(() -> userService.create(userForSave))
-                .isInstanceOf(RuntimeException.class);
+        assertThrows(RuntimeException.class, () -> userService.create(userForSave));
     }
 
     @Test
@@ -69,8 +67,7 @@ public class UserServiceTest {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
         unsavedUser.setUsername(savedUser.getUsername());
 
-        assertThatThrownBy(() -> userService.create(unsavedUser))
-                .isInstanceOf(DuplicateUserException.class);
+        assertThrows(DuplicateUserException.class, () -> userService.create(unsavedUser));
     }
 
     @Test
@@ -79,8 +76,7 @@ public class UserServiceTest {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
         unsavedUser.setEmail(savedUser.getEmail());
 
-        assertThatThrownBy(() -> userService.create(unsavedUser))
-                .isInstanceOf(DuplicateUserException.class);
+        assertThrows(DuplicateUserException.class, () -> userService.create(unsavedUser));
     }
 
     @Test
@@ -114,8 +110,8 @@ public class UserServiceTest {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
         User userDataForUpdate = userTestDataGenerator.generateUnsavedData();
 
-        assertThatThrownBy(() -> userService.updateById(userDataForUpdate, unsavedUser.getId()))
-                .isInstanceOf(NoSuchElementException.class);
+        assertThrows(NoSuchElementException.class,
+                () -> userService.updateById(userDataForUpdate, unsavedUser.getId()));
     }
 
     @Test
@@ -125,8 +121,8 @@ public class UserServiceTest {
         User anotherSavedUser = userTestDataGenerator.generateSavedData();
         userDataForUpdate.setUsername(anotherSavedUser.getUsername());
 
-        assertThatThrownBy(() -> userService.updateById(userDataForUpdate, savedUser.getId()))
-                .isInstanceOf(DuplicateUserException.class);
+        assertThrows(DuplicateUserException.class,
+                () -> userService.updateById(userDataForUpdate, savedUser.getId()));
     }
 
     @Test
@@ -136,8 +132,8 @@ public class UserServiceTest {
         User anotherSavedUser = userTestDataGenerator.generateSavedData();
         newUserDataForUpdate.setEmail(anotherSavedUser.getEmail());
 
-        assertThatThrownBy(() -> userService.updateById(newUserDataForUpdate, savedUser.getId()))
-                .isInstanceOf(DuplicateUserException.class);
+        assertThrows(DuplicateUserException.class,
+                () -> userService.updateById(newUserDataForUpdate, savedUser.getId()));
     }
 
     @Test
@@ -212,8 +208,8 @@ public class UserServiceTest {
     public void findAuthorsByNonExistentArticleId() {
         Article unsavedArticle = articleTestDataGenerator.generateUnsavedData();
 
-        assertThatThrownBy(() -> userService.findAuthorsByArticleId(unsavedArticle.getId()))
-                .isInstanceOf(NoSuchElementException.class);
+        assertThrows(NoSuchElementException.class,
+                () -> userService.findAuthorsByArticleId(unsavedArticle.getId()));
     }
 
     @Test

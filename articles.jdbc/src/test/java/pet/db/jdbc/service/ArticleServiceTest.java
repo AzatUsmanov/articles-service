@@ -2,8 +2,10 @@ package pet.db.jdbc.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import pet.db.jdbc.entity.Article;
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.tool.db.DbCleaner;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -81,8 +83,8 @@ public class ArticleServiceTest {
         Article articleForSave = articleTestDataGenerator.generateUnsavedData();
         articleForSave.setContent(null);
 
-        assertThatThrownBy(() -> articleService.create(articleForSave, new ArrayList<>()))
-                .isInstanceOf(RuntimeException.class);
+        assertThrows(RuntimeException.class,
+                () -> articleService.create(articleForSave, new ArrayList<>()));
     }
 
     @Test
@@ -101,8 +103,8 @@ public class ArticleServiceTest {
     public void updateArticleByNonExistentId() {
         Article articleDataForUpdate = articleTestDataGenerator.generateUnsavedData();
 
-        assertThatThrownBy(() -> articleService.updateById(articleDataForUpdate, articleDataForUpdate.getId()))
-                .isInstanceOf(NoSuchElementException.class);
+        assertThrows(NoSuchElementException.class,
+                () -> articleService.updateById(articleDataForUpdate, articleDataForUpdate.getId()));
     }
 
     @Test
@@ -163,8 +165,8 @@ public class ArticleServiceTest {
     public void findArticlesByNonExistentAuthorId() {
         User unsavedAuthor = userTestDataGenerator.generateUnsavedData();
 
-        assertThatThrownBy(() -> articleService.findArticlesByAuthorId(unsavedAuthor.getId()))
-                .isInstanceOf(NoSuchElementException.class);
+        assertThrows(NoSuchElementException.class,
+                () -> articleService.findArticlesByAuthorId(unsavedAuthor.getId()));
     }
 
     @Test

@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import pet.db.jdbc.entity.Article;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 

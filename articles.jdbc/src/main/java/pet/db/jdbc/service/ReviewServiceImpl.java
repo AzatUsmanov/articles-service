@@ -2,11 +2,11 @@ package pet.db.jdbc.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
+
 import pet.db.jdbc.entity.Review;
-import pet.db.jdbc.repository.ArticleRepository;
 import pet.db.jdbc.repository.ReviewRepository;
-import pet.db.jdbc.repository.UserRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;

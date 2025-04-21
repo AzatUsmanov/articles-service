@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
+
 import pet.db.jdbc.controller.payload.NewArticlePayload;
 import pet.db.jdbc.controller.payload.UpdateArticlePayload;
-import pet.db.jdbc.service.ArticleService;
 import pet.db.jdbc.service.UserPermissionService;
 import pet.db.jdbc.service.UserService;
 
@@ -22,8 +23,6 @@ public class ArticleSecurityAspect {
     private final UserPermissionService userPermissionService;
 
     private final UserService userService;
-
-    private final ArticleService articleService;
 
     @Before("execution(* pet.db.jdbc.controller.ArticleController.create(..)) && args(articlePayload)")
     public void secureArticleCreation(NewArticlePayload articlePayload) {

@@ -1,10 +1,11 @@
 package pet.db.jdbc.service;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
+
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.tool.exception.DuplicateUserException;
 

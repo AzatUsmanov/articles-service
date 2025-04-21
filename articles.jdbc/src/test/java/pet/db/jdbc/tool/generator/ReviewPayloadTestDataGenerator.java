@@ -1,17 +1,12 @@
 package pet.db.jdbc.tool.generator;
 
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
-import org.instancio.Instancio;
-import org.instancio.Select;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import pet.db.jdbc.controller.payload.ReviewPayload;
-import pet.db.jdbc.controller.payload.UserPayload;
-import pet.db.jdbc.entity.Article;
 import pet.db.jdbc.entity.Review;
-import pet.db.jdbc.entity.User;
-import pet.db.jdbc.service.ReviewService;
 
 import java.util.List;
 

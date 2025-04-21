@@ -2,9 +2,11 @@ package pet.db.jdbc.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.tool.db.DbCleaner;
 import pet.db.jdbc.tool.generator.TestDataGenerator;
@@ -12,8 +14,8 @@ import pet.db.jdbc.tool.exception.DuplicateUserException;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -55,32 +57,28 @@ public class RegistrationServiceTest {
 
     @Test
     public void registerWithInvalidData() {
-        User userForSave = userTestDataGenerator.generateUnsavedData();
-        userForSave.setUsername(null);
+        User userForRegistration = userTestDataGenerator.generateUnsavedData();
+        userForRegistration.setUsername(null);
 
-        assertThatThrownBy(() -> userService.create(userForSave))
-                .isInstanceOf(RuntimeException.class);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userForRegistration));
     }
 
     @Test
     public void registerUserWithNotUniqueUsername() {
         User savedUser = userTestDataGenerator.generateSavedData();
-        User unsavedUser = userTestDataGenerator.generateUnsavedData();
-        unsavedUser.setUsername(savedUser.getUsername());
+        User userForRegistration = userTestDataGenerator.generateUnsavedData();
+        userForRegistration.setUsername(savedUser.getUsername());
 
-        assertThatThrownBy(() -> userService.create(unsavedUser))
-                .isInstanceOf(DuplicateUserException.class);
+        assertThrows(DuplicateUserException.class, () -> registrationService.register(userForRegistration));
     }
 
     @Test
     public void registerUserWithNotUniqueEmail() {
         User savedUser = userTestDataGenerator.generateSavedData();
-        User unsavedUser = userTestDataGenerator.generateUnsavedData();
-        unsavedUser.setEmail(savedUser.getEmail());
+        User userForRegistration = userTestDataGenerator.generateUnsavedData();
+        userForRegistration.setEmail(savedUser.getEmail());
 
-        assertThatThrownBy(() -> userService.create(unsavedUser))
-                .isInstanceOf(DuplicateUserException.class);
+        assertThrows(DuplicateUserException.class, () -> registrationService.register(userForRegistration));
     }
-
 
 }

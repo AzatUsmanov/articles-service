@@ -1,9 +1,11 @@
 package pet.db.jdbc.controller;
 
 import jakarta.servlet.ServletException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,12 +16,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
 import pet.db.jdbc.controller.payload.ReviewPayload;
 import pet.db.jdbc.entity.Article;
 import pet.db.jdbc.entity.Review;
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.service.UserService;
-import pet.db.jdbc.tool.AuthenticationDetailsProducer;
+import pet.db.jdbc.tool.producer.AuthenticationDetailsProducer;
 import pet.db.jdbc.tool.db.DbCleaner;
 import pet.db.jdbc.tool.generator.TestDataGenerator;
 
@@ -27,17 +30,24 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static pet.db.jdbc.controller.ArticleControllerTest.ArticleTestConstants.JsonPaths.DATE_OF_CREATION;
-import static pet.db.jdbc.controller.ArticleControllerTest.ArticleTestConstants.JsonPaths.ID;
+
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.ErrorMessages.VALIDATION_FIELD;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.DATE_OF_CREATION;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.ERROR;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.FIELD_ERRORS;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.ID;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.LENGTH;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.PATH;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -178,8 +188,8 @@ public class ReviewControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isUnprocessableEntity(),
-                        jsonPath("$.error").value("validation_field"),
-                        jsonPath("$.field_errors").isString()
+                        jsonPath(ERROR).value(VALIDATION_FIELD),
+                        jsonPath(FIELD_ERRORS).isString()
                 );
     }
 
@@ -198,8 +208,7 @@ public class ReviewControllerTest {
                 .with(user(registeredAdmin))
                 .content(reviewPayloadJsonTester.write(reviewPayload).getJson());
 
-        assertThatThrownBy(() -> mockMvc.perform(request))
-                .isInstanceOf(ServletException.class);
+        assertThrows(ServletException.class, () -> mockMvc.perform(request));
     }
 
     @Test
@@ -217,8 +226,7 @@ public class ReviewControllerTest {
                 .with(user(registeredAdmin))
                 .content(reviewPayloadJsonTester.write(reviewPayload).getJson());
 
-        assertThatThrownBy(() -> mockMvc.perform(request))
-                .isInstanceOf(ServletException.class);
+        assertThrows(ServletException.class, () -> mockMvc.perform(request));
     }
 
 
@@ -309,8 +317,8 @@ public class ReviewControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$").isArray(),
-                        jsonPath("$.length()").value(reviewsWrittenByAuthor.size())
+                        jsonPath(PATH).isArray(),
+                        jsonPath(LENGTH).value(reviewsWrittenByAuthor.size())
                 ).andDo(result -> {
                     List<Review> reviews = getReviewListFromMvcResult(result);
                     assertTrue(reviews.containsAll(reviewsWrittenByAuthor));
@@ -325,8 +333,7 @@ public class ReviewControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
-        assertThatThrownBy(() -> mockMvc.perform(request))
-                .isInstanceOf(ServletException.class);
+        assertThrows(ServletException.class, () -> mockMvc.perform(request));
     }
 
 
@@ -344,8 +351,8 @@ public class ReviewControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$").isArray(),
-                        jsonPath("$.length()").value(reviewsWrittenForArticle.size())
+                        jsonPath(PATH).isArray(),
+                        jsonPath(LENGTH).value(reviewsWrittenForArticle.size())
                 ).andDo(result -> {
                     List<Review> reviews = getReviewListFromMvcResult(result);
                     assertTrue(reviews.containsAll(reviewsWrittenForArticle));
@@ -360,8 +367,7 @@ public class ReviewControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
-        assertThatThrownBy(() -> mockMvc.perform(request))
-                .isInstanceOf(ServletException.class);
+        assertThrows(ServletException.class, () -> mockMvc.perform(request));
     }
 
 

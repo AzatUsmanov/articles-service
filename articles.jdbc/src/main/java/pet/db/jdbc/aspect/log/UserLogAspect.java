@@ -1,17 +1,13 @@
 package pet.db.jdbc.aspect.log;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
+
 import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.security.access.AccessDeniedException;
+import org.aspectj.lang.annotation.Aspect;
+
 import org.springframework.stereotype.Component;
-import pet.db.jdbc.controller.payload.NewArticlePayload;
-import pet.db.jdbc.controller.payload.UserPayload;
+
 import pet.db.jdbc.entity.User;
-import pet.db.jdbc.service.UserPermissionService;
 
 @Slf4j
 @Aspect

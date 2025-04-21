@@ -1,9 +1,9 @@
 package pet.db.jdbc.repository;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Repository;
-import org.springframework.validation.annotation.Validated;
+
 import pet.db.jdbc.entity.Review;
 
 import javax.sql.DataSource;
@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;

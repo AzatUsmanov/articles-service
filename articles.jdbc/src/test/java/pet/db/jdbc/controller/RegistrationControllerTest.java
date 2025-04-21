@@ -2,6 +2,7 @@ package pet.db.jdbc.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,21 +11,29 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
 import pet.db.jdbc.controller.payload.RegistrationPayload;
-import pet.db.jdbc.controller.payload.UserPayload;
+
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.tool.db.DbCleaner;
 import pet.db.jdbc.tool.generator.TestDataGenerator;
 
-import java.util.Map;
 import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.ErrorMessages.DUPLICATE_FIELD;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.ErrorMessages.VALIDATION_FIELD;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.Fields.EMAIL;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.Fields.USERNAME;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.ERROR;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.FIELD;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.FIELD_ERRORS;
+import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.ID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -66,7 +75,7 @@ public class RegistrationControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isCreated(),
-                        jsonPath("$.id").isNumber()
+                        jsonPath(ID).isNumber()
                 ).andDo(result -> {
                     User user = getUserFromMvcResult(result);
                     assertTrue(isUserMatchesRegistrationPayload(user, registrationPayload));
@@ -83,8 +92,8 @@ public class RegistrationControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isUnprocessableEntity(),
-                        jsonPath("$.error").value("validation_field"),
-                        jsonPath("$.field_errors").isString()
+                        jsonPath(ERROR).value(VALIDATION_FIELD),
+                        jsonPath(FIELD_ERRORS).isString()
                 );
     }
 
@@ -104,8 +113,8 @@ public class RegistrationControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isConflict(),
-                        jsonPath("$.error").value("duplicate_field"),
-                        jsonPath("$.field").value("username")
+                        jsonPath(ERROR).value(DUPLICATE_FIELD),
+                        jsonPath(FIELD).value(USERNAME)
                 );
     }
 
@@ -126,8 +135,8 @@ public class RegistrationControllerTest {
         mockMvc.perform(request)
                 .andExpectAll(
                         status().isConflict(),
-                        jsonPath("$.error").value("duplicate_field"),
-                        jsonPath("$.field").value("email")
+                        jsonPath(ERROR).value(DUPLICATE_FIELD),
+                        jsonPath(FIELD).value(EMAIL)
                 );
     }
 

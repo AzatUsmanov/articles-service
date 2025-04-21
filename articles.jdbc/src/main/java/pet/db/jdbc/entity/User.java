@@ -1,6 +1,7 @@
 package pet.db.jdbc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,10 +9,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 import pet.db.jdbc.controller.payload.UserPayload;
 import pet.db.jdbc.controller.payload.RegistrationPayload;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 

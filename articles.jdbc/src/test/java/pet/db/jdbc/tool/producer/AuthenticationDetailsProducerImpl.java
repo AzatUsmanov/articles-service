@@ -1,10 +1,12 @@
-package pet.db.jdbc.tool;
+package pet.db.jdbc.tool.producer;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
 import pet.db.jdbc.entity.User;
 import pet.db.jdbc.service.RegistrationService;
 import pet.db.jdbc.tool.exception.DuplicateUserException;

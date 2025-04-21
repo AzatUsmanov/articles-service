@@ -1,13 +1,11 @@
 package pet.db.jdbc.tool.generator;
 
 import lombok.RequiredArgsConstructor;
-import org.instancio.Instancio;
-import org.instancio.Select;
+
 import org.springframework.stereotype.Component;
+
 import pet.db.jdbc.controller.payload.UserPayload;
 import pet.db.jdbc.entity.User;
-import pet.db.jdbc.service.UserService;
-import pet.db.jdbc.tool.exception.DuplicateUserException;
 
 import java.util.List;
 
