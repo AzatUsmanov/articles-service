@@ -37,7 +37,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article updateById(Article article, Integer id) {
         if (!existsById(id)) {
-            throw new NoSuchElementException("Attempt to update article by non existent id");
+            throw new NoSuchElementException(
+                    "Attempt to update article by non existent id = %d".formatted(id));
         }
         return articleRepository.updateById(article, id);
     }
@@ -56,7 +57,7 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> findArticlesByAuthorId(Integer authorId) {
         if (!userRepository.existsById(authorId)) {
             throw new NoSuchElementException(
-                    String.format("Attempt to find list of articles by non existent user id = %d", authorId));
+                    "Attempt to find list of articles by non existent user id = %d".formatted(authorId));
         }
         List<Integer> articleIds = authorshipOfArticleRepository.findArticleIdsByAuthorId(authorId);
         return findByIds(articleIds);
@@ -81,11 +82,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     private void saveAuthorship(Article savedArticle, List<Integer> authorIds) {
-        List<AuthorshipOfArticle> authorshipOfArticles = transform(savedArticle, authorIds);
+        List<AuthorshipOfArticle> authorshipOfArticles = transformToListOfAuthorshipOfArticle(savedArticle, authorIds);
         authorshipOfArticleRepository.save(authorshipOfArticles);
     }
 
-    private List<AuthorshipOfArticle> transform(Article savedArticle, List<Integer> authorIds) {
+    private List<AuthorshipOfArticle> transformToListOfAuthorshipOfArticle(Article savedArticle, List<Integer> authorIds) {
         return authorIds.stream()
                 .map(id -> new AuthorshipOfArticle(savedArticle.getId(), id))
                 .toList();

@@ -41,7 +41,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<Review> findByAuthorId(Integer authorId) {
         if (!userService.existsById(authorId)) {
-            throw new NoSuchElementException("Attempt to find reviews by non existent author");
+            throw new NoSuchElementException(
+                    "Attempt to find reviews by non existent author id = %d".formatted(authorId));
         }
         return reviewRepository.findByAuthorId(authorId);
     }
@@ -49,7 +50,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<Review> findByArticleId(Integer articleId) {
         if (!articleService.existsById(articleId)) {
-            throw new NoSuchElementException("Attempt to find reviews by non existent article");
+            throw new NoSuchElementException(
+                    "Attempt to find reviews by non existent article id = %d".formatted(articleId));
         }
         return reviewRepository.findByArticleId(articleId);
     }

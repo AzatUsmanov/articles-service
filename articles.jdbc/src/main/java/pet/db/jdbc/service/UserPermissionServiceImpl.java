@@ -33,11 +33,15 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     }
 
     private User getTargetUserById(Integer userId) {
-        return userService.findById(userId).orElseThrow(NoSuchElementException::new);
+        return userService.findById(userId)
+                .orElseThrow(NoSuchElementException::new);
     }
 
     private UserDetails getCurrentUser() {
-        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (UserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
     }
 
     private boolean isCurrentUserMatchesTarget(UserDetails currentUser, User targetUser) {

@@ -2,6 +2,7 @@ package pet.db.jdbc.security;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,18 +22,30 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    @Value("${api.paths.users}")
+    private String usersPath;
+
+    @Value("${api.paths.articles}")
+    private String articlesPath;
+
+    @Value("${api.paths.reviews}")
+    private String reviewsPath;
+
+    @Value("${api.paths.registration}")
+    private String registrationPath;
+
     private final UserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeHttpRequests -> {
                     authorizeHttpRequests
-                            .requestMatchers("/api/registration").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/users").hasRole("ADMIN")
-                            .requestMatchers("/api/users", "/api/articles", "/api/reviews").hasAnyRole("USER", "ADMIN")
+                            .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
+                            .requestMatchers(registrationPath).permitAll()
+                            .requestMatchers(HttpMethod.POST, usersPath).hasRole("ADMIN")
+                            .requestMatchers(usersPath, articlesPath, reviewsPath).hasAnyRole("USER", "ADMIN")
 //                             additional security checks are performed in aspect at the controller level
                             .anyRequest().authenticated();
                 })
@@ -51,6 +64,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

@@ -54,7 +54,8 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return findById(review.getId()).orElseThrow(NoSuchElementException::new);
+        return findById(review.getId())
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -120,12 +121,14 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     private Review getReviewFromResultSet(ResultSet resultSet) throws SQLException {
         return Review.builder()
-                .id(resultSet.getInt("id"))
-                .type(Review.Type.getByNumber(resultSet.getInt("type")))
-                .dateOfCreation(resultSet.getTimestamp("date_of_creation").toLocalDateTime())
-                .content(resultSet.getString("content"))
-                .authorId(resultSet.getInt("author_id"))
-                .articleId(resultSet.getInt("article_id"))
+                .id(resultSet.getInt(Review.Column.ID.toString()))
+                .type(Review.Type.getByNumber(
+                        resultSet.getInt(Review.Column.TYPE.toString())))
+                .dateOfCreation(
+                        resultSet.getTimestamp(Review.Column.DATE_OF_CREATION.toString()).toLocalDateTime())
+                .content(resultSet.getString(Review.Column.CONTENT.toString()))
+                .authorId(resultSet.getInt(Review.Column.AUTHOR_ID.toString()))
+                .articleId(resultSet.getInt(Review.Column.ARTICLE_ID.toString()))
                 .build();
     }
 

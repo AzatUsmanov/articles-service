@@ -11,7 +11,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:application.properties")
 public class DataSourceConfig {
 
     @Value("${spring.datasource.url}")

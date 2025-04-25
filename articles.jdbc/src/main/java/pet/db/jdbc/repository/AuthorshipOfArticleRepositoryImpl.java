@@ -45,7 +45,7 @@ public class AuthorshipOfArticleRepositoryImpl implements AuthorshipOfArticleRep
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return  authorshipOfArticles;
+        return authorshipOfArticles;
     }
 
     @Override
@@ -57,7 +57,8 @@ public class AuthorshipOfArticleRepositoryImpl implements AuthorshipOfArticleRep
             try (ResultSet resultSet = prepareStatement.executeQuery()) {
                 List<Integer> authorIds = new ArrayList<>();
                 while (resultSet.next()) {
-                    authorIds.add(resultSet.getInt("author_id"));
+                    authorIds.add(
+                            resultSet.getInt(AuthorshipOfArticle.Column.AUTHOR_ID.toString()));
                 }
                 return authorIds;
             }
@@ -75,7 +76,8 @@ public class AuthorshipOfArticleRepositoryImpl implements AuthorshipOfArticleRep
             try (ResultSet resultSet = prepareStatement.executeQuery()) {
                 List<Integer> articleIds = new ArrayList<>();
                 while (resultSet.next()) {
-                    articleIds.add(resultSet.getInt("article_id"));
+                    articleIds.add(
+                            resultSet.getInt(AuthorshipOfArticle.Column.ARTICLE_ID.toString()));
                 }
                 return articleIds;
             }

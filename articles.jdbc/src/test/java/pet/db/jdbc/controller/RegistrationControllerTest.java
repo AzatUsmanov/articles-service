@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +41,8 @@ import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.
 @AutoConfigureJsonTesters
 public class RegistrationControllerTest {
 
-    public static final String REGISTRATION_PATH = "/api/registration";
+    @Value("${api.paths.registration}")
+    public String REGISTRATION_PATH;
 
     @Autowired
     private MockMvc mockMvc;

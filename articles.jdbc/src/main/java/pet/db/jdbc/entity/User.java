@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import pet.db.jdbc.controller.payload.UserPayload;
@@ -22,27 +23,6 @@ import java.util.NoSuchElementException;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-
-
-    @Getter
-    public enum Role {
-        ROLE_USER(0), ROLE_ADMIN(1);
-
-        private final int number;
-
-        Role(int number) {
-            this.number = number;
-        }
-
-        public static User.Role getByNumber(Integer number) {
-            return Arrays
-                    .stream(User.Role.values())
-                    .filter(x -> x.getNumber() == number).
-                    findFirst()
-                    .orElseThrow(NoSuchElementException::new);
-        }
-
-    }
 
     private Integer id;
 
@@ -69,6 +49,43 @@ public class User {
         this.email = userPayload.email();
         this.password = userPayload.password();
         this.role = userPayload.role();
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum Role {
+
+        ROLE_USER(0),
+        ROLE_ADMIN(1);
+
+        private final int number;
+
+        public static User.Role getByNumber(Integer number) {
+            return Arrays
+                    .stream(User.Role.values())
+                    .filter(x -> x.getNumber() == number).
+                    findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+        }
+
+    }
+
+    @RequiredArgsConstructor
+    public enum Column {
+
+        ID("id"),
+        USERNAME("username"),
+        EMAIL("email"),
+        PASSWORD("password"),
+        ROLE("role");
+
+        private final String name;
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+
     }
 
 }

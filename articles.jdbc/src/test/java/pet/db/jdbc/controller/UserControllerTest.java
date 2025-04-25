@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,11 +61,14 @@ import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.
 @AutoConfigureJsonTesters
 public class UserControllerTest {
 
-    public static final String USERS_PATH = "/api/users";
+    @Value("${api.paths.users}")
+    public String USERS_PATH;
 
-    public static final String USERS_ID_PATH = "/api/users/%d";
+    @Value("#{'${api.paths.users}' + '/%d'}")
+    public String USERS_ID_PATH;
 
-    public static final String USERS_AUTHORSHIP_ID_PATH = "/api/users/authorship/%d";
+    @Value("#{'${api.paths.users}' + '/authorship/%d'}")
+    public String USERS_AUTHORSHIP_ID_PATH;
 
     @Autowired
     private MockMvc mockMvc;
@@ -210,7 +214,7 @@ public class UserControllerTest {
     public void updateUserById() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = patch(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -230,7 +234,7 @@ public class UserControllerTest {
         User savedUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
         UserDetails targetUserDetails = userToUserDetailsConverter.convert(savedUser);
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = patch(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(targetUserDetails)))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -249,7 +253,7 @@ public class UserControllerTest {
     public void updateUserByIdWithoutAccess() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = patch(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -268,7 +272,7 @@ public class UserControllerTest {
                 userDataForUpdate.getPassword(),
                 userDataForUpdate.getRole()
         );
-        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = patch(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -287,7 +291,7 @@ public class UserControllerTest {
     public void updateUserByNonExistentId() throws Exception {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(USERS_ID_PATH, unsavedUser.getId()))
+        var request = patch(USERS_ID_PATH.formatted(unsavedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -305,7 +309,7 @@ public class UserControllerTest {
                 userDataForUpdate.getEmail(),
                 userDataForUpdate.getPassword(),
                 userDataForUpdate.getRole());
-        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = patch(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -328,7 +332,7 @@ public class UserControllerTest {
                 anotherSavedUser.getEmail(),
                 userDataForUpdate.getPassword(),
                 userDataForUpdate.getRole());
-        var request = patch(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = patch(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(UserPayloadJsonTester.write(userPayload).getJson());
@@ -344,7 +348,7 @@ public class UserControllerTest {
     @Test
     public void deleteUserById() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
-        var request = delete(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = delete(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -356,7 +360,7 @@ public class UserControllerTest {
     public void deleteUserByIdViaTargetUser() throws Exception {
         User savedUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
         UserDetails targetUserDetails = userToUserDetailsConverter.convert(savedUser);
-        var request = delete(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = delete(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(targetUserDetails)));
 
@@ -367,7 +371,7 @@ public class UserControllerTest {
     @Test
     public void deleteUserByIdWithoutAccess() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
-        var request = delete(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = delete(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
@@ -378,7 +382,7 @@ public class UserControllerTest {
     @Test
     public void deleteUserByNonExistentId() throws Exception {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
-        var request = delete(String.format(USERS_ID_PATH, unsavedUser.getId()))
+        var request = delete(USERS_ID_PATH.formatted(unsavedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -389,7 +393,7 @@ public class UserControllerTest {
     @Test
     public void findUserById() throws Exception {
         User savedUser = userTestDataGenerator.generateSavedData();
-        var request = get(String.format(USERS_ID_PATH, savedUser.getId()))
+        var request = get(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
@@ -406,7 +410,7 @@ public class UserControllerTest {
     @Test
     public void findUserByNonExistentId() throws Exception {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(USERS_ID_PATH, unsavedUser.getId()))
+        var request = get(USERS_ID_PATH.formatted(unsavedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
@@ -422,7 +426,7 @@ public class UserControllerTest {
                 .map(User::getId)
                 .toList();
         Article savedArticle = articleService.create(unsavedArticle, authorIds);
-        var request = get(String.format(USERS_AUTHORSHIP_ID_PATH, savedArticle.getId()))
+        var request = get(USERS_AUTHORSHIP_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -442,7 +446,7 @@ public class UserControllerTest {
     @Test
     public void findAuthorsByNonExistentArticleId() throws Exception {
         Article unsavedArticle = articleTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(USERS_AUTHORSHIP_ID_PATH, unsavedArticle.getId()))
+        var request = get(USERS_AUTHORSHIP_ID_PATH.formatted(unsavedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(registeredAdmin)));
 

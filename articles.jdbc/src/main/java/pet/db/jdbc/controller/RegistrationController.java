@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,9 @@ import pet.db.jdbc.tool.exception.DuplicateUserException;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/registration", produces="application/json", consumes = "application/json")
+@RequestMapping(path = "${api.paths.registration}",
+        produces= MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
 public class RegistrationController {
 
     private final RegistrationService registrationService;

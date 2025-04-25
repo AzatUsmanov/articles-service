@@ -11,9 +11,8 @@ public record ReviewPayload(
         Review.Type type,
 
         @NotNull(message = "content must be not null")
-        @Size(min = ReviewPayload.CONTENT_MIN_LENGTH, max = ReviewPayload.CONTENT_MAX_LENGTH,
-                message = "the length of the content must be between " +
-                        ReviewPayload.CONTENT_MIN_LENGTH + " and " + ReviewPayload.CONTENT_MAX_LENGTH)
+        @Size(min = CONTENT_MIN_LENGTH, max = CONTENT_MAX_LENGTH,
+                message = "the length of the content must be between {min} and {max}")
         String content,
 
         @Positive(message = "authorId type must be positive")

@@ -55,7 +55,8 @@ public class ArticleRepositoryImpl implements ArticleRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return findById(article.getId()).orElseThrow(NoSuchElementException::new);
+        return findById(article.getId())
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -69,7 +70,8 @@ public class ArticleRepositoryImpl implements ArticleRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return findById(id).orElseThrow(NoSuchElementException::new);
+        return findById(id)
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -138,10 +140,11 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 
     private Article getArticleFromResultSet(ResultSet resultSet) throws SQLException {
         return Article.builder()
-                .id(resultSet.getInt("id"))
-                .topic(resultSet.getString("topic"))
-                .content(resultSet.getString("content"))
-                .dateOfCreation(resultSet.getTimestamp("date_of_creation").toLocalDateTime())
+                .id(resultSet.getInt(Article.Column.ID.toString()))
+                .topic(resultSet.getString(Article.Column.TOPIC.toString()))
+                .content(resultSet.getString(Article.Column.CONTENT.toString()))
+                .dateOfCreation(
+                        resultSet.getTimestamp(Article.Column.DATE_OF_CREATION.toString()).toLocalDateTime())
                 .build();
     }
 

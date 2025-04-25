@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,11 +57,14 @@ import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.
 @AutoConfigureJsonTesters
 public class ArticleControllerTest {
 
-    public static final String ARTICLES_PATH = "/api/articles";
+    @Value("${api.paths.articles}")
+    public String ARTICLES_PATH = "/api/articles";
 
-    public static final String ARTICLES_ID_PATH = "/api/articles/%d";
+    @Value("#{'${api.paths.articles}' + '/%d'}")
+    public String ARTICLES_ID_PATH;
 
-    public static final String ARTICLES_AUTHORSHIP_ID_PATH = "/api/articles/authorship/%d";
+    @Value("#{'${api.paths.articles}' + '/authorship/%d'}")
+    public String ARTICLES_AUTHORSHIP_ID_PATH;
 
     @Autowired
     private MockMvc mockMvc;
@@ -233,7 +237,7 @@ public class ArticleControllerTest {
     public void updateArticleById() throws Exception {
         Article savedArticle = articleTestDataGenerator.generateSavedData();
         UpdateArticlePayload updateArticlePayload = updateArticlePayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = patch(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(updateArticlePayloadJsonTester.write(updateArticlePayload).getJson());
@@ -255,7 +259,7 @@ public class ArticleControllerTest {
         User authorOfArticle = userService.findAuthorsByArticleId(savedArticle.getId()).getFirst();
         UserDetails userDetailsOfRegisteredUser = userToUserDetailsConverter.convert(authorOfArticle);
         UpdateArticlePayload updateArticlePayload = updateArticlePayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = patch(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(userDetailsOfRegisteredUser)))
                 .content(updateArticlePayloadJsonTester.write(updateArticlePayload).getJson());
@@ -275,7 +279,7 @@ public class ArticleControllerTest {
     public void updateArticleByIdWithoutAccess() throws Exception {
         Article savedArticle = articleTestDataGenerator.generateSavedData();
         UpdateArticlePayload updateArticlePayload = updateArticlePayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = patch(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(registeredUser)))
                 .content(updateArticlePayloadJsonTester.write(updateArticlePayload).getJson());
@@ -288,7 +292,7 @@ public class ArticleControllerTest {
     public void updateArticleByNonExistentId() throws Exception {
         Article unsavedArticle = articleTestDataGenerator.generateUnsavedData();
         UpdateArticlePayload updateArticlePayload = updateArticlePayloadTestDataGenerator.generateUnsavedData();
-        var request = patch(String.format(ARTICLES_ID_PATH, unsavedArticle.getId()))
+        var request = patch(ARTICLES_ID_PATH.formatted(unsavedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(updateArticlePayloadJsonTester.write(updateArticlePayload).getJson());
@@ -300,7 +304,7 @@ public class ArticleControllerTest {
     public void updateArticleByIdWithInvalidData() throws Exception {
         Article savedArticle = articleTestDataGenerator.generateSavedData();
         UpdateArticlePayload updateArticlePayload = new UpdateArticlePayload("", "");
-        var request = patch(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = patch(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
                 .content(updateArticlePayloadJsonTester.write(updateArticlePayload).getJson());
@@ -316,7 +320,7 @@ public class ArticleControllerTest {
     @Test
     public void deleteArticleById() throws Exception {
         Article savedArticle = articleTestDataGenerator.generateSavedData();
-        var request = delete(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = delete(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -329,7 +333,7 @@ public class ArticleControllerTest {
         Article savedArticle = articleTestDataGenerator.generateSavedData();
         User authorOfArticle = userService.findAuthorsByArticleId(savedArticle.getId()).getFirst();
         UserDetails userDetailsOfRegisteredUser = userToUserDetailsConverter.convert(authorOfArticle);
-        var request = delete(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = delete(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(userDetailsOfRegisteredUser)));
 
@@ -341,7 +345,7 @@ public class ArticleControllerTest {
     @Test
     public void deleteArticleByIdWithoutAccess() throws Exception {
         Article savedArticle = articleTestDataGenerator.generateSavedData();
-        var request = delete(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = delete(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
@@ -352,7 +356,7 @@ public class ArticleControllerTest {
     @Test
     public void deleteArticleByNonExistentId() throws Exception {
         Article savedArticle = articleTestDataGenerator.generateSavedData();
-        var request = delete(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = delete(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -362,7 +366,7 @@ public class ArticleControllerTest {
     @Test
     public void findArticleById() throws Exception {
         Article savedArticle = articleTestDataGenerator.generateSavedData();
-        var request = get(String.format(ARTICLES_ID_PATH, savedArticle.getId()))
+        var request = get(ARTICLES_ID_PATH.formatted(savedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -378,7 +382,7 @@ public class ArticleControllerTest {
     @Test
     public void findArticleByNonExistentId() throws Exception {
         Article unsavedArticle = articleTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(ARTICLES_ID_PATH, unsavedArticle.getId()))
+        var request = get(ARTICLES_ID_PATH.formatted(unsavedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -394,7 +398,7 @@ public class ArticleControllerTest {
         List<Article> savedArticles = unsavedArticles.stream()
                 .map(x -> articleService.create(x, List.of(savedAuthor.getId())))
                 .toList();
-        var request = get(String.format(ARTICLES_AUTHORSHIP_ID_PATH, savedAuthor.getId()))
+        var request = get(ARTICLES_AUTHORSHIP_ID_PATH.formatted(savedAuthor.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -414,7 +418,7 @@ public class ArticleControllerTest {
     @Test
     public void findArticlesByNonExistentAuthorId() throws Exception {
         User unsavedAuthor = userTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(ARTICLES_AUTHORSHIP_ID_PATH, unsavedAuthor.getId()))
+        var request = get(ARTICLES_AUTHORSHIP_ID_PATH.formatted(unsavedAuthor.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 

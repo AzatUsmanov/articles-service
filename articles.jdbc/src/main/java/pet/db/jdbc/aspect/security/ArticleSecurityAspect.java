@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
@@ -26,20 +27,20 @@ public class ArticleSecurityAspect {
 
     @Before("execution(* pet.db.jdbc.controller.ArticleController.create(..)) && args(articlePayload)")
     public void secureArticleCreation(NewArticlePayload articlePayload) {
-        secureEditMethod(articlePayload.authorIds(), "create");
+        secureEditMethod(articlePayload.authorIds(), HttpMethod.POST);
     }
 
     @Before("execution(* pet.db.jdbc.controller.ArticleController.updateById(..)) && args(articlePayload, id)")
     public void secureArticleUpdate(UpdateArticlePayload articlePayload, Integer id) {
-        secureEditMethod(userService.findAuthorIdsByArticleId(id), "update");
+        secureEditMethod(userService.findAuthorIdsByArticleId(id), HttpMethod.PATCH);
     }
 
     @Before("execution(* pet.db.jdbc.controller.ArticleController.deleteById(..)) && args(id)")
     public void secureArticleDeletion(Integer id) {
-        secureEditMethod(userService.findAuthorIdsByArticleId(id), "delete");
+        secureEditMethod(userService.findAuthorIdsByArticleId(id), HttpMethod.DELETE);
     }
 
-    private void secureEditMethod(List<Integer> authorIds, String methodName) {
+    private void secureEditMethod(List<Integer> authorIds, HttpMethod method) {
         if (authorIds.isEmpty()) return;
 
         boolean hasNoEditPermission = authorIds.stream()
@@ -47,7 +48,7 @@ public class ArticleSecurityAspect {
 
         if (hasNoEditPermission) {
             throw new AccessDeniedException(
-                    String.format("Attempt to %s article without proper permission", methodName));
+                    "Attempt to %s article without proper permission".formatted(method));
         }
     }
 

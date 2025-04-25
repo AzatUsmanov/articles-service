@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,13 +55,17 @@ import static pet.db.jdbc.controller.constant.ControllerTestConstants.JsonPaths.
 @AutoConfigureJsonTesters
 public class ReviewControllerTest {
 
-    public static final String REVIEWS_PATH = "/api/reviews";
+    @Value("${api.paths.reviews}")
+    public String REVIEWS_PATH;
 
-    public static final String REVIEWS_ID_PATH = "/api/reviews/%d";
+    @Value("#{'${api.paths.reviews}' + '/%d'}")
+    public String REVIEWS_ID_PATH;
 
-    public static final String REVIEWS_USERS_ID_PATH = "/api/reviews/users/%d";
+    @Value("#{'${api.paths.reviews}' + '/users/%d'}")
+    public String REVIEWS_USERS_ID_PATH;
 
-    public static final String REVIEWS_ARTICLES_ID_PATH = "/api/reviews/articles/%d";
+    @Value("#{'${api.paths.reviews}' + '/articles/%d'}")
+    public String REVIEWS_ARTICLES_ID_PATH;
 
     @Autowired
     private MockMvc mockMvc;
@@ -233,7 +238,7 @@ public class ReviewControllerTest {
     @Test
     public void deleteReviewById() throws Exception {
         Review savedReview = reviewTestDataGenerator.generateSavedData();
-        var request = delete(String.format(REVIEWS_ID_PATH, savedReview.getId()))
+        var request = delete(REVIEWS_ID_PATH.formatted(savedReview.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -246,7 +251,7 @@ public class ReviewControllerTest {
         Review savedReview = reviewTestDataGenerator.generateSavedData();
         User authorOfReview = userService.findById(savedReview.getAuthorId()).orElseThrow(NoSuchElementException::new);
         UserDetails userDetailsOfRegisteredUser = userToUserDetailsConverter.convert(authorOfReview);
-        var request = delete(String.format(REVIEWS_ID_PATH, savedReview.getId()))
+        var request = delete(REVIEWS_ID_PATH.formatted(savedReview.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(Objects.requireNonNull(userDetailsOfRegisteredUser)));
 
@@ -257,7 +262,7 @@ public class ReviewControllerTest {
     @Test
     public void deleteReviewByIdWithoutAccess() throws Exception {
         Review savedReview = reviewTestDataGenerator.generateSavedData();
-        var request = delete(String.format(REVIEWS_ID_PATH, savedReview.getId()))
+        var request = delete(REVIEWS_ID_PATH.formatted(savedReview.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
@@ -268,7 +273,7 @@ public class ReviewControllerTest {
     @Test
     public void deleteReviewByNonExistentId() throws Exception {
         Review unsavedReview = reviewTestDataGenerator.generateUnsavedData();
-        var request = delete(String.format(REVIEWS_ID_PATH, unsavedReview.getId()))
+        var request = delete(REVIEWS_ID_PATH.formatted(unsavedReview.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredUser));
 
@@ -279,7 +284,7 @@ public class ReviewControllerTest {
     @Test
     public void findReviewById() throws Exception {
         Review savedReview = reviewTestDataGenerator.generateSavedData();
-        var request = get(String.format(REVIEWS_ID_PATH, savedReview.getId()))
+        var request = get(REVIEWS_ID_PATH.formatted(savedReview.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -295,7 +300,7 @@ public class ReviewControllerTest {
     @Test
     public void findReviewByNonExistentId() throws Exception {
         Review unsavedReview = reviewTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(REVIEWS_ID_PATH, unsavedReview.getId()))
+        var request = get(REVIEWS_ID_PATH.formatted(unsavedReview.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -310,7 +315,7 @@ public class ReviewControllerTest {
         List<Review> reviewsWrittenByAuthor = savedReviews.stream()
                 .filter(x -> Objects.equals(x.getAuthorId(), authorId))
                 .toList();
-        var request = get(String.format(REVIEWS_USERS_ID_PATH, authorId))
+        var request = get(REVIEWS_USERS_ID_PATH.formatted(authorId))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -327,9 +332,9 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void findReviewsByNonExistentAuthorId() throws Exception {
+    public void findReviewsByNonExistentAuthorId() {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(REVIEWS_USERS_ID_PATH, unsavedUser.getId()))
+        var request = get(REVIEWS_USERS_ID_PATH.formatted(unsavedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -344,7 +349,7 @@ public class ReviewControllerTest {
         List<Review> reviewsWrittenForArticle = savedReviews.stream()
                 .filter(x -> Objects.equals(x.getArticleId(), articleId))
                 .toList();
-        var request = get(String.format(REVIEWS_ARTICLES_ID_PATH, articleId))
+        var request = get(REVIEWS_ARTICLES_ID_PATH.formatted(articleId))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 
@@ -361,9 +366,9 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void findReviewsByNonExistentArticleId() throws Exception {
+    public void findReviewsByNonExistentArticleId() {
         Article unsavedArticle = articleTestDataGenerator.generateUnsavedData();
-        var request = get(String.format(REVIEWS_ARTICLES_ID_PATH, unsavedArticle.getId()))
+        var request = get(REVIEWS_ARTICLES_ID_PATH.formatted(unsavedArticle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin));
 

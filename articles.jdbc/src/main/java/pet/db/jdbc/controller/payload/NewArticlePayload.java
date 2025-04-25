@@ -8,15 +8,13 @@ import java.util.List;
 
 public record NewArticlePayload (
         @NotNull(message = "topic must be not null")
-        @Size(min = NewArticlePayload.TOPIC_MIN_LENGTH, max = NewArticlePayload.TOPIC_MAX_LENGTH,
-                message = "the length of the topic must be between " +
-                        NewArticlePayload.TOPIC_MIN_LENGTH + " and " + NewArticlePayload.TOPIC_MAX_LENGTH)
+        @Size(min = TOPIC_MIN_LENGTH, max = TOPIC_MAX_LENGTH,
+                message = "the length of the topic must be between {min} and {max}")
         String topic,
 
         @NotNull(message = "content must be not null")
-        @Size(min = NewArticlePayload.CONTENT_MIN_LENGTH, max = NewArticlePayload.CONTENT_MAX_LENGTH,
-                message = "the length of the content must be between " +
-                        NewArticlePayload.CONTENT_MIN_LENGTH + " and " + NewArticlePayload.CONTENT_MAX_LENGTH)
+        @Size(min = CONTENT_MIN_LENGTH, max = CONTENT_MAX_LENGTH,
+                message = "the length of the content must be between {min} and {max}")
         String content,
         @NotEmpty(message = "authorIds must be not empty")
         @NotNull(message = "username must be not null")

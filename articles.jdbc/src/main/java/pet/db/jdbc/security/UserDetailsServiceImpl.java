@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userService
                 .findByUsername(username)
                 .map(userToUserDetailsConverter::convert)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with username = %s not found", username)));
+                .orElseThrow(() -> new UsernameNotFoundException("User with username = %s not found".formatted(username)));
     }
 
 }

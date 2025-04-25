@@ -8,22 +8,19 @@ import pet.db.jdbc.entity.User;
 
 public record UserPayload(
         @NotNull(message = "username must be not null")
-        @Size(min = UserPayload.USERNAME_MIN_LENGTH, max = UserPayload.USERNAME_MAX_LENGTH,
-                message = "the length of the username must be between " +
-                        UserPayload.USERNAME_MIN_LENGTH + " and " + UserPayload.USERNAME_MAX_LENGTH)
+        @Size(min = USERNAME_MIN_LENGTH, max = USERNAME_MAX_LENGTH,
+                message = "the length of the username must be between {min} and {max}")
         String username,
 
         @NotNull(message = "email must be not null")
-        @Size(min = UserPayload.EMAIL_MIN_LENGTH, max = UserPayload.EMAIL_MAX_LENGTH,
-                message = "the length of the email must be between " +
-                        UserPayload.EMAIL_MIN_LENGTH + " and " + UserPayload.EMAIL_MAX_LENGTH)
+        @Size(min = EMAIL_MIN_LENGTH, max = EMAIL_MAX_LENGTH,
+                message = "the length of the email must be between {min} and {max}")
         @Email(message = "the email is in the wrong format")
         String email,
 
         @NotNull(message = "password must be not null")
-        @Size(min = UserPayload.PASSWORD_MIN_LENGTH, max = UserPayload.USERNAME_MAX_LENGTH,
-                message = "the length of the password must be between " +
-                        UserPayload.PASSWORD_MIN_LENGTH + " and " + UserPayload.USERNAME_MAX_LENGTH)
+        @Size(min = PASSWORD_MIN_LENGTH, max = USERNAME_MAX_LENGTH,
+                message = "the length of the password must be between {min} and {max}")
         String password,
 
         @NotNull(message = "User role must be not null")

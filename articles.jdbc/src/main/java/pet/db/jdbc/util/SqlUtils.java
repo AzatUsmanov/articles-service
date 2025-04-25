@@ -6,11 +6,10 @@ import java.util.stream.Collectors;
 public class SqlUtils {
 
     public static String buildInClause(String sqlTemplate, List<Integer> ids) {
-        String placeholders = ids
-                .stream()
+        String placeholders = ids.stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(","));
-        return String.format(sqlTemplate, placeholders);
+        return sqlTemplate.formatted(placeholders);
     }
 
 }

@@ -52,7 +52,8 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return findByUsername(user.getUsername()).orElseThrow(NoSuchElementException::new);
+        return findByUsername(user.getUsername())
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -68,7 +69,8 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return findById(id).orElseThrow(NoSuchElementException::new);
+        return findById(id)
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -174,11 +176,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
         return User.builder()
-                .id(resultSet.getInt("id"))
-                .username(resultSet.getString("username"))
-                .email(resultSet.getString("email"))
-                .password(resultSet.getString("password"))
-                .role(User.Role.getByNumber(resultSet.getInt("role")))
+                .id(resultSet.getInt(User.Column.ID.toString()))
+                .username(resultSet.getString(User.Column.USERNAME.toString()))
+                .email(resultSet.getString(User.Column.EMAIL.toString()))
+                .password(resultSet.getString(User.Column.PASSWORD.toString()))
+                .role(User.Role.getByNumber(
+                        resultSet.getInt(User.Column.ROLE.toString())))
                 .build();
     }
 

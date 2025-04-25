@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     public List<User> findAuthorsByArticleId(Integer articleId) {
         if (!articleRepository.existsById(articleId)) {
             throw new NoSuchElementException(
-                    String.format("Attempt to find list of users by non existent user id = %d", articleId));
+                    "Attempt to find list of users by non existent user id = %d".formatted(articleId));
         }
         List<Integer> authorsIds = authorshipOfArticleRepository.findAuthorIdsByArticleId(articleId);
         return findByIds(authorsIds);
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
         if (existingUser == null || !Objects.equals(existingUser.getUsername(), user.getUsername())) {
             if (existsByUsername(user.getUsername())) {
                 throw new DuplicateUserException("username",
-                        String.format("User with username %s already exists.", user.getUsername()));
+                        "User with username %s already exists.".formatted(user.getUsername()));
             }
         }
     }
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
         if (existingUser == null || !Objects.equals(existingUser.getEmail(), user.getEmail())) {
             if (existsByEmail(user.getEmail())) {
                 throw new DuplicateUserException("email",
-                        String.format("User with email %s already exists.", user.getEmail()));
+                        "User with email %s already exists.".formatted(user.getEmail()));
             }
         }
     }
