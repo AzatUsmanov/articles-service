@@ -1,4 +1,4 @@
-package pet.db.jdbc.controller.payload;
+package pet.db.jdbc.model.dto.payload;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

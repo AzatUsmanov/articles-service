@@ -9,7 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.stereotype.Service;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
+import pet.db.jdbc.model.enums.UserRole;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
     @Override
     public boolean checkUserForEditPermissionById(Integer userId) {
-        GrantedAuthority userRoleAuthority = new SimpleGrantedAuthority(User.Role.ROLE_USER.toString());
+        GrantedAuthority userRoleAuthority = new SimpleGrantedAuthority(UserRole.ROLE_USER.toString());
         UserDetails currentUser = getCurrentUser();
 
         if (currentUser.getAuthorities().contains(userRoleAuthority)) {

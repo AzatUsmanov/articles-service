@@ -7,10 +7,10 @@ import org.instancio.Select;
 
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.controller.payload.ReviewPayload;
-import pet.db.jdbc.entity.Article;
-import pet.db.jdbc.entity.Review;
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.payload.ReviewPayload;
+import pet.db.jdbc.model.dto.Article;
+import pet.db.jdbc.model.dto.Review;
+import pet.db.jdbc.model.dto.User;
 import pet.db.jdbc.service.ReviewService;
 
 import java.time.LocalDateTime;

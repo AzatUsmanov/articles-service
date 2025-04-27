@@ -4,12 +4,13 @@ import jakarta.validation.constraints.NotNull;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
+import pet.db.jdbc.model.enums.UserRole;
 
 public interface AuthenticationDetailsProducer {
 
-    UserDetails produceUserDetailsOfRegisteredUser(@NotNull User.Role role);
+    UserDetails produceUserDetailsOfRegisteredUser(@NotNull UserRole role);
 
-    User produceRegisteredUserWithRawPassword(@NotNull User.Role role);
+    User produceRegisteredUserWithRawPassword(@NotNull UserRole role);
 
 }

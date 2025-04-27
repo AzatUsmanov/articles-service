@@ -7,7 +7,8 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
+import pet.db.jdbc.model.enums.UserRole;
 import pet.db.jdbc.service.RegistrationService;
 import pet.db.jdbc.tool.exception.DuplicateUserException;
 import pet.db.jdbc.tool.generator.TestDataGenerator;
@@ -26,13 +27,13 @@ public class AuthenticationDetailsProducerImpl implements AuthenticationDetailsP
     private RegistrationService registrationService;
 
     @Override
-    public UserDetails produceUserDetailsOfRegisteredUser(User.Role role) {
+    public UserDetails produceUserDetailsOfRegisteredUser(UserRole role) {
         User registredUser = produceRegisteredUserWithRawPassword(role);
         return userToUserDetailsConverter.convert(registredUser);
     }
 
     @Override
-    public User produceRegisteredUserWithRawPassword(User.Role role) {
+    public User produceRegisteredUserWithRawPassword(UserRole role) {
         User unsavedUser = userTestDataGenerator.generateUnsavedData();
         unsavedUser.setRole(role);
         try {

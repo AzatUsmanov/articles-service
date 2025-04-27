@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Repository;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
+import pet.db.jdbc.model.enums.UserColumn;
+import pet.db.jdbc.model.enums.UserRole;
 import pet.db.jdbc.util.SqlUtils;
 
 import javax.sql.DataSource;
@@ -176,12 +178,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
         return User.builder()
-                .id(resultSet.getInt(User.Column.ID.toString()))
-                .username(resultSet.getString(User.Column.USERNAME.toString()))
-                .email(resultSet.getString(User.Column.EMAIL.toString()))
-                .password(resultSet.getString(User.Column.PASSWORD.toString()))
-                .role(User.Role.getByNumber(
-                        resultSet.getInt(User.Column.ROLE.toString())))
+                .id(resultSet.getInt(UserColumn.ID.toString()))
+                .username(resultSet.getString(UserColumn.USERNAME.toString()))
+                .email(resultSet.getString(UserColumn.EMAIL.toString()))
+                .password(resultSet.getString(UserColumn.PASSWORD.toString()))
+                .role(UserRole.getByNumber(
+                        resultSet.getInt(UserColumn.ROLE.toString())))
                 .build();
     }
 

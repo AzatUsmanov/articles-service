@@ -9,7 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.controller.payload.ReviewPayload;
+import pet.db.jdbc.model.dto.payload.ReviewPayload;
 import pet.db.jdbc.service.ReviewService;
 import pet.db.jdbc.service.UserPermissionService;
 

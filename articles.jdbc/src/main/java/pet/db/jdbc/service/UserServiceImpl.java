@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
 import pet.db.jdbc.repository.ArticleRepository;
 import pet.db.jdbc.repository.AuthorshipOfArticleRepository;
 import pet.db.jdbc.repository.UserRepository;

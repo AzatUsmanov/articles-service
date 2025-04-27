@@ -18,10 +18,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import pet.db.jdbc.controller.payload.NewArticlePayload;
-import pet.db.jdbc.controller.payload.UpdateArticlePayload;
-import pet.db.jdbc.entity.Article;
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.payload.NewArticlePayload;
+import pet.db.jdbc.model.dto.payload.UpdateArticlePayload;
+import pet.db.jdbc.model.dto.Article;
+import pet.db.jdbc.model.dto.User;
+import pet.db.jdbc.model.enums.UserRole;
 import pet.db.jdbc.service.ArticleService;
 import pet.db.jdbc.service.UserService;
 import pet.db.jdbc.tool.producer.AuthenticationDetailsProducer;
@@ -114,8 +115,8 @@ public class ArticleControllerTest {
 
     @BeforeEach
     void initAuthenticationData() {
-        registeredUser = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(User.Role.ROLE_USER);
-        registeredAdmin = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(User.Role.ROLE_ADMIN);
+        registeredUser = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(UserRole.ROLE_USER);
+        registeredAdmin = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(UserRole.ROLE_ADMIN);
     }
 
     @AfterEach
@@ -146,7 +147,7 @@ public class ArticleControllerTest {
     @Test
     public void createArticleViaTargetUser() throws Exception {
         NewArticlePayload newArticlePayload = newArticlePayloadTestDataGenerator.generateUnsavedData();
-        User registeredUser = authenticationDataGenerator.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
+        User registeredUser = authenticationDataGenerator.produceRegisteredUserWithRawPassword(UserRole.ROLE_USER);
         UserDetails userDetailsOfRegisteredUser = userToUserDetailsConverter.convert(registeredUser);
         newArticlePayload.authorIds().add(registeredUser.getId());
         var request = post(ARTICLES_PATH)

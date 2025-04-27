@@ -2,7 +2,7 @@ package pet.db.jdbc.repository;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import pet.db.jdbc.entity.Article;
+import pet.db.jdbc.model.dto.Article;
 
 import java.util.List;
 import java.util.Optional;

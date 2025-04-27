@@ -18,10 +18,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import pet.db.jdbc.controller.payload.ReviewPayload;
-import pet.db.jdbc.entity.Article;
-import pet.db.jdbc.entity.Review;
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.payload.ReviewPayload;
+import pet.db.jdbc.model.dto.Article;
+import pet.db.jdbc.model.dto.Review;
+import pet.db.jdbc.model.dto.User;
+import pet.db.jdbc.model.enums.UserRole;
 import pet.db.jdbc.service.UserService;
 import pet.db.jdbc.tool.producer.AuthenticationDetailsProducer;
 import pet.db.jdbc.tool.db.DbCleaner;
@@ -109,8 +110,8 @@ public class ReviewControllerTest {
 
     @BeforeEach
     void initAuthenticationData() {
-        registeredUser = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(User.Role.ROLE_USER);
-        registeredAdmin = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(User.Role.ROLE_ADMIN);
+        registeredUser = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(UserRole.ROLE_USER);
+        registeredAdmin = authenticationDataGenerator.produceUserDetailsOfRegisteredUser(UserRole.ROLE_ADMIN);
     }
 
     @AfterEach
@@ -139,7 +140,7 @@ public class ReviewControllerTest {
 
     @Test
     public void createReviewViaTargetUser() throws Exception {
-        User registeredUser = authenticationDataGenerator.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
+        User registeredUser = authenticationDataGenerator.produceRegisteredUserWithRawPassword(UserRole.ROLE_USER);
         UserDetails userDetailsOfRegisteredUser = userToUserDetailsConverter.convert(registeredUser);
         Review unsavedReview = reviewTestDataGenerator.generateUnsavedData();
         ReviewPayload reviewPayload = new ReviewPayload(

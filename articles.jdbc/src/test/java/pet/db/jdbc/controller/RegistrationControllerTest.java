@@ -13,9 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import pet.db.jdbc.controller.payload.RegistrationPayload;
+import pet.db.jdbc.model.dto.payload.RegistrationPayload;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
 import pet.db.jdbc.tool.db.DbCleaner;
 import pet.db.jdbc.tool.generator.TestDataGenerator;
 

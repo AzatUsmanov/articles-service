@@ -18,9 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import pet.db.jdbc.controller.payload.UserPayload;
-import pet.db.jdbc.entity.Article;
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.payload.UserPayload;
+import pet.db.jdbc.model.dto.Article;
+import pet.db.jdbc.model.dto.User;
+import pet.db.jdbc.model.enums.UserRole;
 import pet.db.jdbc.service.ArticleService;
 import pet.db.jdbc.tool.producer.AuthenticationDetailsProducer;
 import pet.db.jdbc.tool.db.DbCleaner;
@@ -110,8 +111,8 @@ public class UserControllerTest {
 
     @BeforeEach
     public void initAuthenticationDetails() {
-        registeredUser = authenticationDetailsProducer.produceUserDetailsOfRegisteredUser(User.Role.ROLE_USER);
-        registeredAdmin = authenticationDetailsProducer.produceUserDetailsOfRegisteredUser(User.Role.ROLE_ADMIN);
+        registeredUser = authenticationDetailsProducer.produceUserDetailsOfRegisteredUser(UserRole.ROLE_USER);
+        registeredAdmin = authenticationDetailsProducer.produceUserDetailsOfRegisteredUser(UserRole.ROLE_ADMIN);
     }
 
     @AfterEach
@@ -151,7 +152,8 @@ public class UserControllerTest {
 
     @Test
     public void createUserWithInvalidData() throws Exception {
-        UserPayload userPayloadWithInvalidData = new UserPayload("", "", "", User.Role.ROLE_USER);
+        UserPayload userPayloadWithInvalidData =
+                new UserPayload("", "", "", UserRole.ROLE_USER);
         var request = post(USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(registeredAdmin))
@@ -231,7 +233,7 @@ public class UserControllerTest {
 
     @Test
     public void updateUserByIdViaTargetUser() throws Exception {
-        User savedUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
+        User savedUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(UserRole.ROLE_USER);
         UserDetails targetUserDetails = userToUserDetailsConverter.convert(savedUser);
         UserPayload userPayload = UserPayloadTestDataGenerator.generateUnsavedData();
         var request = patch(USERS_ID_PATH.formatted(savedUser.getId()))
@@ -358,7 +360,7 @@ public class UserControllerTest {
 
     @Test
     public void deleteUserByIdViaTargetUser() throws Exception {
-        User savedUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
+        User savedUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(UserRole.ROLE_USER);
         UserDetails targetUserDetails = userToUserDetailsConverter.convert(savedUser);
         var request = delete(USERS_ID_PATH.formatted(savedUser.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -456,7 +458,7 @@ public class UserControllerTest {
     @Test
     public void findAllUsers() throws Exception {
         cleanDb();
-        User registredUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(User.Role.ROLE_USER);
+        User registredUser = authenticationDetailsProducer.produceRegisteredUserWithRawPassword(UserRole.ROLE_USER);
         UserDetails UserDetails = userToUserDetailsConverter.convert(registredUser);
         List<User> allUsers = new ArrayList<>(userTestDataGenerator.generateSavedData(10));
         allUsers.add(registredUser);

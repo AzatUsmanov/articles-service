@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
 import pet.db.jdbc.tool.exception.DuplicateUserException;
 
 @Service

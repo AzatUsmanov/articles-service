@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.controller.payload.ReviewPayload;
-import pet.db.jdbc.entity.Review;
+import pet.db.jdbc.model.dto.payload.ReviewPayload;
+import pet.db.jdbc.model.dto.Review;
 
 import java.util.List;
 

@@ -1,14 +1,14 @@
-package pet.db.jdbc.controller.payload;
+package pet.db.jdbc.model.dto.payload;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-import pet.db.jdbc.entity.Review;
+import pet.db.jdbc.model.enums.ReviewType;
 
 public record ReviewPayload(
         @NotNull(message = "review type must not be null")
-        Review.Type type,
+        ReviewType type,
 
         @NotNull(message = "content must be not null")
         @Size(min = CONTENT_MIN_LENGTH, max = CONTENT_MAX_LENGTH,

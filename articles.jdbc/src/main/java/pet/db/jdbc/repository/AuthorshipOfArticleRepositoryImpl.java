@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Repository;
 
-import pet.db.jdbc.entity.AuthorshipOfArticle;
+import pet.db.jdbc.model.dto.AuthorshipOfArticle;
+import pet.db.jdbc.model.enums.AuthorshipOfArticleColumn;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -58,7 +59,7 @@ public class AuthorshipOfArticleRepositoryImpl implements AuthorshipOfArticleRep
                 List<Integer> authorIds = new ArrayList<>();
                 while (resultSet.next()) {
                     authorIds.add(
-                            resultSet.getInt(AuthorshipOfArticle.Column.AUTHOR_ID.toString()));
+                            resultSet.getInt(AuthorshipOfArticleColumn.AUTHOR_ID.toString()));
                 }
                 return authorIds;
             }
@@ -77,7 +78,7 @@ public class AuthorshipOfArticleRepositoryImpl implements AuthorshipOfArticleRep
                 List<Integer> articleIds = new ArrayList<>();
                 while (resultSet.next()) {
                     articleIds.add(
-                            resultSet.getInt(AuthorshipOfArticle.Column.ARTICLE_ID.toString()));
+                            resultSet.getInt(AuthorshipOfArticleColumn.ARTICLE_ID.toString()));
                 }
                 return articleIds;
             }

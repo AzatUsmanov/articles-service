@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Repository;
 
-import pet.db.jdbc.entity.Article;
+import pet.db.jdbc.model.dto.Article;
+import pet.db.jdbc.model.enums.ArticleColumn;
 import pet.db.jdbc.util.SqlUtils;
 
 import javax.sql.DataSource;
@@ -140,11 +141,11 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 
     private Article getArticleFromResultSet(ResultSet resultSet) throws SQLException {
         return Article.builder()
-                .id(resultSet.getInt(Article.Column.ID.toString()))
-                .topic(resultSet.getString(Article.Column.TOPIC.toString()))
-                .content(resultSet.getString(Article.Column.CONTENT.toString()))
+                .id(resultSet.getInt(ArticleColumn.ID.toString()))
+                .topic(resultSet.getString(ArticleColumn.TOPIC.toString()))
+                .content(resultSet.getString(ArticleColumn.CONTENT.toString()))
                 .dateOfCreation(
-                        resultSet.getTimestamp(Article.Column.DATE_OF_CREATION.toString()).toLocalDateTime())
+                        resultSet.getTimestamp(ArticleColumn.DATE_OF_CREATION.toString()).toLocalDateTime())
                 .build();
     }
 

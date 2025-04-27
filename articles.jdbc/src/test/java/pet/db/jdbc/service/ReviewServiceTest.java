@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import pet.db.jdbc.entity.Article;
-import pet.db.jdbc.entity.Review;
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.Article;
+import pet.db.jdbc.model.dto.Review;
+import pet.db.jdbc.model.dto.User;
 import pet.db.jdbc.tool.db.DbCleaner;
 import pet.db.jdbc.tool.generator.TestDataGenerator;
 

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import pet.db.jdbc.controller.payload.UserPayload;
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.payload.UserPayload;
+import pet.db.jdbc.model.dto.User;
 import pet.db.jdbc.service.UserService;
 import pet.db.jdbc.tool.exception.DuplicateUserException;
 
@@ -34,15 +35,19 @@ public class UserController {
 
     private final UserService userService;
 
+    private final Converter<UserPayload, User> userPayloadToUserConverter;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody @Valid UserPayload userPayload) throws DuplicateUserException {
-        return userService.create(new User(userPayload));
+        User user = userPayloadToUserConverter.convert(userPayload);
+        return userService.create(user);
     }
 
     @PatchMapping("/{id}")
     public User updateById(@RequestBody @Valid UserPayload userPayload, @PathVariable("id") Integer id) throws DuplicateUserException {
-        return userService.updateById(new User(userPayload), id);
+        User user = userPayloadToUserConverter.convert(userPayload);
+        return userService.updateById(user, id);
     }
 
     @DeleteMapping("/{id}")

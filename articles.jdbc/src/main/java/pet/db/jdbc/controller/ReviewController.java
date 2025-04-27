@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import pet.db.jdbc.controller.payload.ReviewPayload;
-import pet.db.jdbc.entity.Review;
+import pet.db.jdbc.model.dto.payload.ReviewPayload;
+import pet.db.jdbc.model.dto.Review;
 import pet.db.jdbc.service.ReviewService;
 
 import java.util.List;
@@ -32,10 +33,13 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    private final Converter<ReviewPayload, Review> reviewPayloadToReviewConverter;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Review create(@RequestBody @Valid ReviewPayload reviewPayload) {
-        return reviewService.create(new Review(reviewPayload));
+        Review review = reviewPayloadToReviewConverter.convert(reviewPayload);
+        return reviewService.create(review);
     }
 
     @DeleteMapping("/{id}")

@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.Aspect;
 
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.entity.Article;
+import pet.db.jdbc.model.dto.Article;
 
 @Slf4j
 @Aspect

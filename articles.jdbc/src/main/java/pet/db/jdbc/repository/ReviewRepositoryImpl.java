@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Repository;
 
-import pet.db.jdbc.entity.Review;
+import pet.db.jdbc.model.dto.Review;
+import pet.db.jdbc.model.enums.ReviewColumn;
+import pet.db.jdbc.model.enums.ReviewType;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -121,14 +123,14 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     private Review getReviewFromResultSet(ResultSet resultSet) throws SQLException {
         return Review.builder()
-                .id(resultSet.getInt(Review.Column.ID.toString()))
-                .type(Review.Type.getByNumber(
-                        resultSet.getInt(Review.Column.TYPE.toString())))
+                .id(resultSet.getInt(ReviewColumn.ID.toString()))
+                .type(ReviewType.getByNumber(
+                        resultSet.getInt(ReviewColumn.TYPE.toString())))
                 .dateOfCreation(
-                        resultSet.getTimestamp(Review.Column.DATE_OF_CREATION.toString()).toLocalDateTime())
-                .content(resultSet.getString(Review.Column.CONTENT.toString()))
-                .authorId(resultSet.getInt(Review.Column.AUTHOR_ID.toString()))
-                .articleId(resultSet.getInt(Review.Column.ARTICLE_ID.toString()))
+                        resultSet.getTimestamp(ReviewColumn.DATE_OF_CREATION.toString()).toLocalDateTime())
+                .content(resultSet.getString(ReviewColumn.CONTENT.toString()))
+                .authorId(resultSet.getInt(ReviewColumn.AUTHOR_ID.toString()))
+                .articleId(resultSet.getInt(ReviewColumn.ARTICLE_ID.toString()))
                 .build();
     }
 

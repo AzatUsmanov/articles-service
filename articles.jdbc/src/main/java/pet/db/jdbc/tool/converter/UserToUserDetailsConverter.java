@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
 
 import java.util.List;
 

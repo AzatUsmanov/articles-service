@@ -7,9 +7,9 @@ import org.instancio.Select;
 
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.controller.payload.NewArticlePayload;
-import pet.db.jdbc.entity.Article;
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.payload.NewArticlePayload;
+import pet.db.jdbc.model.dto.Article;
+import pet.db.jdbc.model.dto.User;
 import pet.db.jdbc.service.ArticleService;
 
 import java.time.LocalDateTime;

@@ -1,10 +1,10 @@
-package pet.db.jdbc.controller.payload;
+package pet.db.jdbc.model.dto.payload;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.enums.UserRole;
 
 public record UserPayload(
         @NotNull(message = "username must be not null")
@@ -24,7 +24,7 @@ public record UserPayload(
         String password,
 
         @NotNull(message = "User role must be not null")
-        User.Role role) {
+        UserRole role) {
 
         public static final int USERNAME_MIN_LENGTH = 5;
 

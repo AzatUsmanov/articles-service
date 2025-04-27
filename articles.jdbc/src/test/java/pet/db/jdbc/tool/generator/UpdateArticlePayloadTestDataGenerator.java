@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.controller.payload.UpdateArticlePayload;
-import pet.db.jdbc.entity.Article;
+import pet.db.jdbc.model.dto.payload.UpdateArticlePayload;
+import pet.db.jdbc.model.dto.Article;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package pet.db.jdbc.repository;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.User;
 
 import java.util.List;
 import java.util.Optional;

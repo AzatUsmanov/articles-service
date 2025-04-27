@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Component;
 
-import pet.db.jdbc.controller.payload.RegistrationPayload;
-import pet.db.jdbc.entity.User;
+import pet.db.jdbc.model.dto.payload.RegistrationPayload;
+import pet.db.jdbc.model.dto.User;
 
 import java.util.List;
 
