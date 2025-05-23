@@ -1,0 +1,2 @@
+ALTER TABLE public.users
+ADD COLUMN role SMALLINT NOT NULL
