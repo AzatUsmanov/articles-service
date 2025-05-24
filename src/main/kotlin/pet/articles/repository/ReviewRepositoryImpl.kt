@@ -7,40 +7,40 @@ import org.jooq.Record
 import org.jooq.exception.DataAccessException
 
 import org.koin.core.annotation.Single
+import pet.articles.generated.jooq.tables.Users
 
 import pet.articles.generated.jooq.tables.records.ReviewsRecord
+import pet.articles.generated.jooq.tables.records.UsersRecord
 import pet.articles.generated.jooq.tables.references.REVIEWS
+import pet.articles.generated.jooq.tables.references.USERS
 import pet.articles.model.dto.Review
+import pet.articles.model.dto.User
 import pet.articles.tool.extension.toUnit
 
 class ReviewRepositoryImpl(
     private val dsl: DSLContext,
     private val reviewRecordMapper: RecordMapper<Record, Review>,
-    private val reviewRecordUnmapper: RecordUnmapper<Review, ReviewsRecord>
-) : ReviewRepository {
+    reviewRecordUnmapper: RecordUnmapper<Review, ReviewsRecord>
+) : ReviewRepository, CrudJooqRepository<Review, ReviewsRecord>(
+    dsl = dsl,
+    table = REVIEWS,
+    recordMapper = reviewRecordMapper,
+    recordUnmapper = reviewRecordUnmapper,
+    idField = REVIEWS.ID
+) {
 
-    override fun save(review: Review): Review =
+    override fun updateById(item: Review, id: Int): Review =
         dsl.transactionResult { config ->
             config.dsl()
-                .insertInto(REVIEWS)
-                .set(reviewRecordUnmapper.unmap(review))
+                .update(REVIEWS)
+                .set(REVIEWS.TYPE, item.type.ordinal.toShort())
+                .set(REVIEWS.CONTENT, item.content)
+                .where(REVIEWS.ID.eq(id))
                 .returning()
                 .fetchOne()
                 ?.map(reviewRecordMapper)
-                ?: throw DataAccessException("Review was not saved")
+                ?: throw DataAccessException("Review with id = $id was not updated")
         }
-
-    override fun deleteById(id: Int) =
-        dsl.deleteFrom(REVIEWS)
-            .where(REVIEWS.ID.eq(id))
-            .execute()
-            .toUnit()
-
-    override fun findById(id: Int): Review? =
-        dsl.selectFrom(REVIEWS)
-            .where(REVIEWS.ID.eq(id))
-            .fetchOne()
-            ?.map(reviewRecordMapper)
 
     override fun findByAuthorId(authorId: Int): List<Review> =
         dsl.selectFrom(REVIEWS)

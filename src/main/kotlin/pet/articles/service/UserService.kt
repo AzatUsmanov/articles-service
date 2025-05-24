@@ -1,7 +1,6 @@
 package pet.articles.service
 
 import pet.articles.model.dto.User
-import pet.articles.tool.annotation.NotEmpty
 
 interface UserService {
 
@@ -15,7 +14,7 @@ interface UserService {
 
     fun findByUsername(username: String): User?
 
-    fun findByIds(@NotEmpty userIds: List<Int>): List<User>
+    fun findByIds(userIds: List<Int>): List<User>
 
     fun findAll(): List<User>
 

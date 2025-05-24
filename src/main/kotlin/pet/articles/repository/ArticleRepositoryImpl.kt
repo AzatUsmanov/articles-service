@@ -10,28 +10,32 @@ import org.koin.core.annotation.Single
 
 import pet.articles.generated.jooq.tables.records.ArticlesRecord
 import pet.articles.generated.jooq.tables.records.AuthorshipOfArticlesRecord
+import pet.articles.generated.jooq.tables.records.UsersRecord
 import pet.articles.generated.jooq.tables.references.ARTICLES
+import pet.articles.generated.jooq.tables.references.REVIEWS
+import pet.articles.generated.jooq.tables.references.USERS
 import pet.articles.model.dto.Article
 import pet.articles.model.dto.AuthorshipOfArticle
+import pet.articles.model.dto.Review
+import pet.articles.model.dto.User
 import pet.articles.tool.extension.toUnit
 
 class ArticleRepositoryImpl(
     private val dsl: DSLContext,
+    private val authorshipOfArticlesRecordUnmapper: RecordUnmapper<AuthorshipOfArticle, AuthorshipOfArticlesRecord>,
     private val articleRecordMapper: RecordMapper<Record, Article>,
-    private val articleRecordUnmapper: RecordUnmapper<Article, ArticlesRecord>,
-    private val authorshipOfArticlesRecordUnmapper: RecordUnmapper<AuthorshipOfArticle, AuthorshipOfArticlesRecord>
-) : ArticleRepository {
+    articleRecordUnmapper: RecordUnmapper<Article, ArticlesRecord>
+) : ArticleRepository, CrudJooqRepository<Article, ArticlesRecord>(
+    dsl = dsl,
+    table = ARTICLES,
+    recordMapper = articleRecordMapper,
+    recordUnmapper = articleRecordUnmapper,
+    idField = ARTICLES.ID
+) {
 
     override fun save(article: Article, authorIds: List<Int>): Article =
         dsl.transactionResult { config ->
-            val savedArticle: Article = config.dsl()
-                .insertInto(ARTICLES)
-                .set(articleRecordUnmapper.unmap(article))
-                .returning()
-                .fetchOne()
-                ?.map(articleRecordMapper)
-                ?: throw DataAccessException("article was not saved")
-
+            val savedArticle: Article = super.save(article)
             config.dsl()
                 .batchInsert(
                     authorIds.asSequence()
@@ -43,39 +47,16 @@ class ArticleRepositoryImpl(
             savedArticle
         }
 
-    override fun updateById(article: Article, id: Int): Article =
+    override fun updateById(item: Article, id: Int): Article =
         dsl.transactionResult { config ->
             config.dsl()
                 .update(ARTICLES)
-                .set(ARTICLES.TOPIC, article.topic)
-                .set(ARTICLES.CONTENT, article.content)
+                .set(ARTICLES.TOPIC, item.topic)
+                .set(ARTICLES.CONTENT, item.content)
                 .where(ARTICLES.ID.eq(id))
                 .returning()
                 .fetchOne()
                 ?.map(articleRecordMapper)
-                ?: throw DataAccessException("article with id = $id was not updated")
+                ?: throw DataAccessException("Article with id = $id was not updated")
         }
-
-    override fun deleteById(id: Int) =
-        dsl.delete(ARTICLES)
-            .where(ARTICLES.ID.eq(id))
-            .execute()
-            .toUnit()
-
-    override fun findById(id: Int): Article? =
-        dsl.selectFrom(ARTICLES)
-            .where(ARTICLES.ID.eq(id))
-            .fetchOne()
-            ?.map(articleRecordMapper)
-
-    override fun findByIds(ids: List<Int>): List<Article> =
-        dsl.selectFrom(ARTICLES)
-            .where(ARTICLES.ID.`in`(ids))
-            .fetch()
-            .map(articleRecordMapper)
-
-    override fun findAll(): List<Article> =
-        dsl.selectFrom(ARTICLES)
-            .fetch()
-            .map(articleRecordMapper)
 }

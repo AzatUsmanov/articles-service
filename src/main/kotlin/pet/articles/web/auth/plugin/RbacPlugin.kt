@@ -11,13 +11,13 @@ import pet.articles.model.enums.UserRole
 import pet.articles.tool.exception.AccessDeniedException
 import pet.articles.tool.exception.AuthenticationException
 
-class RBACPluginConfig {
+class RbacPluginConfig {
     var roles: List<UserRole> = emptyList()
 }
 
-val RBACPlugin = createRouteScopedPlugin(
+val RbacPlugin = createRouteScopedPlugin(
     name = "RoleBasedAccessControlPlugin",
-    createConfiguration = ::RBACPluginConfig
+    createConfiguration = ::RbacPluginConfig
 ) {
     on(AuthenticationChecked) { call ->
         val principal = call.principal<JWTPrincipal>()
@@ -35,7 +35,7 @@ val RBACPlugin = createRouteScopedPlugin(
 }
 
 fun Route.withRole(vararg roles: UserRole, body: Route.() -> Unit) {
-    install(RBACPlugin) {
+    install(RbacPlugin) {
         this.roles = roles.toList()
     }
     body()

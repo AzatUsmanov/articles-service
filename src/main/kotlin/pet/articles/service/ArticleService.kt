@@ -1,7 +1,6 @@
 package pet.articles.service
 
 import pet.articles.model.dto.Article
-import pet.articles.tool.annotation.NotEmpty
 
 interface ArticleService {
 
@@ -15,7 +14,7 @@ interface ArticleService {
 
     fun findArticlesByAuthorId(authorId: Int): List<Article>
 
-    fun findByIds(@NotEmpty articleIds: List<Int>): List<Article>
+    fun findByIds(articleIds: List<Int>): List<Article>
 
     fun findAll(): List<Article>
 

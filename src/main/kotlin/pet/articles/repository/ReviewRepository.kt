@@ -2,13 +2,7 @@ package pet.articles.repository
 
 import pet.articles.model.dto.Review
 
-interface ReviewRepository {
-
-    fun save(review: Review): Review
-
-    fun deleteById(id: Int)
-
-    fun findById(id: Int): Review?
+interface ReviewRepository : CrudRepository<Review> {
 
     fun findByAuthorId(authorId: Int): List<Review>
 
