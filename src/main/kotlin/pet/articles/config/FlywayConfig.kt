@@ -8,18 +8,15 @@ import org.koin.core.annotation.Single
 
 import javax.sql.DataSource
 
-@Module
 class FlywayConfig {
 
-    @Single
     fun flyway(
-        @Property("flyway.locations") flywayLocations: String,
+        flywayLocations: String,
         dataSource: DataSource
     ): Flyway = Flyway.configure()
         .locations(flywayLocations)
-		.dataSource(dataSource)
+        .dataSource(dataSource)
         .load()
 
-    @Single(createdAtStart = true)
     fun migrate(flyway: Flyway): MigrateResult = flyway.migrate()
 }

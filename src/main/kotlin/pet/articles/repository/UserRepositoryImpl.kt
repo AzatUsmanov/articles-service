@@ -12,7 +12,6 @@ import pet.articles.generated.jooq.tables.references.USERS
 import pet.articles.model.dto.User
 import pet.articles.tool.extension.toUnit
 
-@Single
 class UserRepositoryImpl(
     private val dsl: DSLContext,
     private val userRecordMapper: RecordMapper<Record, User>,

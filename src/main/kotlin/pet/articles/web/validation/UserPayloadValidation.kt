@@ -49,7 +49,8 @@ object UserPayloadValidation {
     }
 
     object ErrorMessages {
-        const val USERNAME_SIZE = "the length of the username must be between $USERNAME_MIN_LENGTH and $USERNAME_MAX_LENGTH"
+        const val USERNAME_SIZE = "the length of the username must be between " +
+                "$USERNAME_MIN_LENGTH and $USERNAME_MAX_LENGTH"
         const val EMAIL_SIZE = "the length of the email must be between {min} and {max}"
         const val EMAIL_INVALID_FORMAT = "the email is in the wrong format"
         const val PASSWORD_SIZE = "the length of the password must be between {min} and {max}"

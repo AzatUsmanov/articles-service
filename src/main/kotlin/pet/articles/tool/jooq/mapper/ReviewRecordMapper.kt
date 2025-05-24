@@ -9,7 +9,6 @@ import pet.articles.generated.jooq.tables.references.REVIEWS
 import pet.articles.model.dto.Review
 import pet.articles.model.enums.ReviewType
 
-@Single
 class ReviewRecordMapper : RecordMapper<Record, Review> {
 
     override fun map(record: Record): Review =

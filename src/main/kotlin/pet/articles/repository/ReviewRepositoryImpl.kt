@@ -13,7 +13,6 @@ import pet.articles.generated.jooq.tables.references.REVIEWS
 import pet.articles.model.dto.Review
 import pet.articles.tool.extension.toUnit
 
-@Single
 class ReviewRepositoryImpl(
     private val dsl: DSLContext,
     private val reviewRecordMapper: RecordMapper<Record, Review>,

@@ -7,7 +7,6 @@ import org.koin.core.annotation.Single
 import pet.articles.generated.jooq.tables.records.UsersRecord
 import pet.articles.model.dto.User
 
-@Single
 class UserRecordUnmapper : RecordUnmapper<User, UsersRecord> {
 
     override fun unmap(source: User?): UsersRecord =

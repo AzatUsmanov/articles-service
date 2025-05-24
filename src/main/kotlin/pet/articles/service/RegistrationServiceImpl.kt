@@ -6,9 +6,9 @@ import org.mindrot.jbcrypt.BCrypt
 
 import pet.articles.model.dto.User
 
-@Single
 class RegistrationServiceImpl(
     private val userService: UserService,
+    private val bcryptSalt: String
 ) : RegistrationService {
 
     override fun register(user: User): User {
@@ -17,5 +17,5 @@ class RegistrationServiceImpl(
     }
 
     private fun setEncryptedPassword(user: User): User =
-        user.copy(password = BCrypt.hashpw(user.password, BCrypt.gensalt(11)))
+        user.copy(password = BCrypt.hashpw(user.password, bcryptSalt))
 }

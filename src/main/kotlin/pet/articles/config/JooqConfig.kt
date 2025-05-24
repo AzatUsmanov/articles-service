@@ -8,10 +8,10 @@ import org.koin.core.annotation.Single
 
 import javax.sql.DataSource
 
-@Module
 class JooqConfig {
 
-    @Single
-    fun dslContext(dataSource: DataSource, dialect: SQLDialect = SQLDialect.POSTGRES): DSLContext =
-        DSL.using(dataSource, dialect)
+    fun dslContext(
+        dataSource: DataSource,
+        dialect: SQLDialect = SQLDialect.POSTGRES
+    ): DSLContext = DSL.using(dataSource, dialect)
 }

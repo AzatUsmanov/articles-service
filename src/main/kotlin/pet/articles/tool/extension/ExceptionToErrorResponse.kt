@@ -13,10 +13,10 @@ fun AuthenticationException.toErrorResponse(): ErrorResponse =
 
 fun RequestValidationException.toErrorResponse(): ErrorResponse =
     ErrorResponse(
-        message.orEmpty(),
-        ErrorResponseType.VALIDATION,
-        reasons.associate {
-            val (key, value) = it.split(":")
+        message = message.orEmpty(),
+        errorResponseType = ErrorResponseType.VALIDATION,
+        details = reasons.associate { reason ->
+            val (key, value) = reason.split(":")
             key to value
         }
     )

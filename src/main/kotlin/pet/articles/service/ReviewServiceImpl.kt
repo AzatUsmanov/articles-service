@@ -5,7 +5,6 @@ import org.koin.core.annotation.Single
 import pet.articles.model.dto.Review
 import pet.articles.repository.ReviewRepository
 
-@Single
 class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
 ) : ReviewService {

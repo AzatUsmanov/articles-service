@@ -6,7 +6,6 @@ import pet.articles.model.dto.Article
 import pet.articles.repository.ArticleRepository
 import pet.articles.repository.AuthorshipOfArticleRepository
 
-@Single
 class ArticleServiceImpl(
     private val articleRepository: ArticleRepository,
     private val authorshipOfArticleRepository: AuthorshipOfArticleRepository

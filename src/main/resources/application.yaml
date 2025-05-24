@@ -3,12 +3,4 @@ ktor:
     port: 8080
   application:
     modules:
-      - pet.articles.web.config.ApplicationConfigKt.module
-
-api:
-  paths:
-    users: "/api/users"
-    articles: "/api/articles"
-    reviews: "/api/reviews"
-    registration: "/api/registration"
-    auth: "/api/auth"
+      - pet.articles.web.ApplicationModuleKt.module

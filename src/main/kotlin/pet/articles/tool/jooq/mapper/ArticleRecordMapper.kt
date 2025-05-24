@@ -8,7 +8,6 @@ import org.koin.core.annotation.Single
 import pet.articles.generated.jooq.tables.references.ARTICLES
 import pet.articles.model.dto.Article
 
-@Single
 class ArticleRecordMapper : RecordMapper<Record, Article> {
 
     override fun map(record: Record): Article =

@@ -5,7 +5,7 @@ val ktorVersion = "3.1.3"
 
 plugins {
 	val kotlinVersion = "2.1.20"
-	val kspVersion = "2.1.20-1.0.32"  // или последняя стабильная
+	val kspVersion = "2.1.20-1.0.32"  
 	val jooqVersion = "9.0"
 	val ktorVersion = "3.1.3"
 

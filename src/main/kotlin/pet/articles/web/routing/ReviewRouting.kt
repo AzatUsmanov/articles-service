@@ -9,74 +9,64 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.getProperty
 import org.koin.ktor.ext.inject
 import pet.articles.model.dto.Review
-import pet.articles.model.dto.payload.NewArticlePayload
 import pet.articles.model.dto.payload.ReviewPayload
 import pet.articles.service.ReviewService
-import pet.articles.service.UserService
-import pet.articles.tool.extension.getIdParam
-import pet.articles.web.auth.withEditPermission
+import pet.articles.web.auth.getIdParam
+import pet.articles.web.auth.plugin.withEditPermission
+import pet.articles.web.auth.receiveReviewAuthorIdsFromBody
 
 fun Application.reviewRouting() {
     val path: String = getProperty("api.paths.reviews")!!
-    val reviewService: ReviewService by inject()
+    val service: ReviewService by inject()
 
     routing {
         authenticate("auth-jwt") {
             route(path) {
-                findReviewByIdRoute(reviewService)
-                findReviewsByArticleIdRoute(reviewService)
-                findReviewsByAuthorIdRoute(reviewService)
+                findReviewByIdRoute(service)
+                findReviewsByArticleIdRoute(service)
+                findReviewsByAuthorIdRoute(service)
 
                 withEditPermission(ApplicationCall::receiveReviewAuthorIdsFromBody) {
-                    createReviewRoute(reviewService)
-                    deleteReviewByIdRoute(reviewService)
+                    createReviewRoute(service)
+                    deleteReviewByIdRoute(service)
                 }
             }
         }
     }
 }
 
-fun Route.createReviewRoute(reviewService: ReviewService) =
+fun Route.createReviewRoute(service: ReviewService) =
     post {
-        val payload: ReviewPayload = call.receive()
-        val createdReview: Review = reviewService.create(payload.toReview())
+        val payloadForCreation: ReviewPayload = call.receive()
+        val createdReview: Review = service.create(payloadForCreation.toReview())
         call.respond(HttpStatusCode.Created, createdReview)
     }
 
-fun Route.deleteReviewByIdRoute(reviewService: ReviewService) =
+fun Route.deleteReviewByIdRoute(service: ReviewService) =
     delete("/{id}") {
         val id: Int = call.getIdParam()
-        reviewService.deleteById(id)
+        service.deleteById(id)
         call.respond(HttpStatusCode.NoContent)
     }
 
-fun Route.findReviewByIdRoute(reviewService: ReviewService) =
+fun Route.findReviewByIdRoute(service: ReviewService) =
     get("/{id}") {
         val id: Int = call.getIdParam()
-        reviewService.findById(id)?.let { review ->
-            call.respond(HttpStatusCode.OK, review)
-        } ?: call.respond(HttpStatusCode.NotFound)
+        service.findById(id)
+            ?.let { review -> call.respond(HttpStatusCode.OK, review) }
+            ?: call.respond(HttpStatusCode.NotFound)
     }
 
-fun Route.findReviewsByArticleIdRoute(reviewService: ReviewService) =
+fun Route.findReviewsByArticleIdRoute(service: ReviewService) =
     get("/articles/{id}") {
         val articleId: Int = call.getIdParam()
-        val reviews: List<Review> = reviewService.findByArticleId(articleId)
-        call.respond(HttpStatusCode.OK, reviews)
+        val foundReviews: List<Review> = service.findByArticleId(articleId)
+        call.respond(HttpStatusCode.OK, foundReviews)
     }
 
-fun Route.findReviewsByAuthorIdRoute(reviewService: ReviewService) =
+fun Route.findReviewsByAuthorIdRoute(service: ReviewService) =
     get("/users/{id}") {
         val authorId: Int = call.getIdParam()
-        val reviews: List<Review> = reviewService.findByAuthorId(authorId)
-        call.respond(HttpStatusCode.OK, reviews)
+        val foundReviews: List<Review> = service.findByAuthorId(authorId)
+        call.respond(HttpStatusCode.OK, foundReviews)
     }
-
-suspend fun ApplicationCall.receiveReviewAuthorIdsFromBody(): List<Int> {
-    val service: ReviewService by inject()
-    return parameters["id"]
-        ?.toInt()
-        ?.let { reviewId -> service.findById(reviewId) ?: return emptyList() }
-        ?.let { review -> listOf(review.authorId!!) }
-        ?: listOf(receive<ReviewPayload>().authorId)
-}

@@ -8,7 +8,6 @@ import pet.articles.generated.jooq.tables.references.USERS
 import pet.articles.model.dto.User
 import pet.articles.model.enums.UserRole
 
-@Single
 class UserRecordMapper : RecordMapper<Record, User> {
 
     override fun map(record: Record): User =

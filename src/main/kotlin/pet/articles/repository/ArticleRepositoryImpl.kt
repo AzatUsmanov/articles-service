@@ -15,7 +15,6 @@ import pet.articles.model.dto.Article
 import pet.articles.model.dto.AuthorshipOfArticle
 import pet.articles.tool.extension.toUnit
 
-@Single
 class ArticleRepositoryImpl(
     private val dsl: DSLContext,
     private val articleRecordMapper: RecordMapper<Record, Article>,

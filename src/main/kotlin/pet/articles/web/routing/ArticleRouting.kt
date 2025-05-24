@@ -12,84 +12,73 @@ import pet.articles.model.dto.Article
 import pet.articles.model.dto.payload.NewArticlePayload
 import pet.articles.model.dto.payload.UpdateArticlePayload
 import pet.articles.service.ArticleService
-import pet.articles.service.UserService
-import pet.articles.tool.extension.getIdParam
-import pet.articles.web.auth.withEditPermission
+import pet.articles.web.auth.getIdParam
+import pet.articles.web.auth.plugin.withEditPermission
+import pet.articles.web.auth.receiveArticleAuthorIdsFromBody
 
 fun Application.articleRouting() {
     val path: String = getProperty("api.paths.articles")!!
-    val articleService: ArticleService by inject()
-
+    val service: ArticleService by inject()
     routing {
         authenticate("auth-jwt") {
             route(path) {
-                findArticleByIdRoute(articleService)
-                findAllArticlesRoute(articleService)
-                findArticlesByAuthorIdRoute(articleService)
+                findArticleByIdRoute(service)
+                findAllArticlesRoute(service)
+                findArticlesByAuthorIdRoute(service)
 
                 withEditPermission(ApplicationCall::receiveArticleAuthorIdsFromBody) {
-                    createArticleRoute(articleService)
-                    updateArticleByIdRoute(articleService)
-                    deleteArticleByIdRoute(articleService)
+                    createArticleRoute(service)
+                    updateArticleByIdRoute(service)
+                    deleteArticleByIdRoute(service)
                 }
             }
         }
     }
 }
 
-fun Route.createArticleRoute(articleService: ArticleService) =
+fun Route.createArticleRoute(service: ArticleService) =
     post {
-        val payload: NewArticlePayload = call.receive()
-        val createdArticle: Article = articleService.create(
-            payload.toArticle(),
-            payload.authorIds
+        val payloadForCreation: NewArticlePayload = call.receive()
+        val createdArticle: Article = service.create(
+            payloadForCreation.toArticle(),
+            payloadForCreation.authorIds
         )
         call.respond(HttpStatusCode.Created, createdArticle)
     }
 
-fun Route.updateArticleByIdRoute(articleService: ArticleService) =
+fun Route.updateArticleByIdRoute(service: ArticleService) =
     patch("/{id}") {
         val id: Int = call.getIdParam()
-        val payload: UpdateArticlePayload = call.receive()
-        val updatedArticle: Article = articleService.updateById(
-            payload.toArticle(),
-            id
-        )
+        val payloadForUpdate: UpdateArticlePayload = call.receive()
+        val updatedArticle: Article = service.updateById(payloadForUpdate.toArticle(), id)
         call.respond(HttpStatusCode.OK, updatedArticle)
     }
 
-fun Route.deleteArticleByIdRoute(articleService: ArticleService) =
+fun Route.deleteArticleByIdRoute(service: ArticleService) =
     delete("/{id}") {
         val id: Int = call.getIdParam()
-        articleService.deleteById(id)
+        service.deleteById(id)
         call.respond(HttpStatusCode.NoContent)
     }
 
-fun Route.findArticleByIdRoute(articleService: ArticleService) =
+fun Route.findArticleByIdRoute(service: ArticleService) =
     get("/{id}") {
         val id: Int = call.getIdParam()
-        articleService.findById(id)?.let { article ->
-            call.respond(HttpStatusCode.OK, article)
-        } ?: call.respond(HttpStatusCode.NotFound)
+        service.findById(id)
+            ?.let { foundArticle -> call.respond(HttpStatusCode.OK, foundArticle) }
+            ?: call.respond(HttpStatusCode.NotFound)
     }
 
-fun Route.findArticlesByAuthorIdRoute(articleService: ArticleService) =
+fun Route.findArticlesByAuthorIdRoute(service: ArticleService) =
     get("/authorship/{id}") {
         val authorId: Int = call.getIdParam()
-        val articles: List<Article> = articleService.findArticlesByAuthorId(authorId)
-        call.respond(HttpStatusCode.OK, articles)
+        val foundArticles: List<Article> = service.findArticlesByAuthorId(authorId)
+        call.respond(HttpStatusCode.OK, foundArticles)
     }
 
-fun Route.findAllArticlesRoute(articleService: ArticleService) =
+fun Route.findAllArticlesRoute(service: ArticleService) =
     get {
-        val articles: List<Article> = articleService.findAll()
-        call.respond(HttpStatusCode.OK, articles)
+        val foundArticles: List<Article> = service.findAll()
+        call.respond(HttpStatusCode.OK, foundArticles)
     }
 
-suspend fun ApplicationCall.receiveArticleAuthorIdsFromBody(): List<Int> {
-    val service: UserService by inject()
-    return parameters["id"]
-        ?.toInt()
-        ?.let { articleId -> service.findAuthorIdsByArticleId(articleId) }
-        ?: receive<NewArticlePayload>().authorIds
-}

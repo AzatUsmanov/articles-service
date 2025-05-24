@@ -7,7 +7,6 @@ import pet.articles.repository.AuthorshipOfArticleRepository
 import pet.articles.repository.UserRepository
 import pet.articles.tool.exception.DuplicateUserException
 
-@Single
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val authorshipOfArticleRepository: AuthorshipOfArticleRepository
