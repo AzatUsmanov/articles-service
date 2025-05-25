@@ -6,12 +6,11 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
-import io.ktor.util.*
 import pet.articles.model.enums.AuthClaim
 import pet.articles.model.enums.UserRole
 import pet.articles.tool.exception.AccessDeniedException
 import pet.articles.tool.exception.AuthenticationException
-import pet.articles.web.auth.get
+import pet.articles.tool.extension.get
 
 class EditPermissionPluginConfig {
     lateinit var receiveOwnerIdsFromBody: suspend ApplicationCall.() -> List<Int>

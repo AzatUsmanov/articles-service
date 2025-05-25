@@ -2,6 +2,9 @@ package pet.articles.web.validation
 
 import io.ktor.server.plugins.requestvalidation.*
 import pet.articles.model.dto.payload.ReviewPayload
+import pet.articles.web.validation.ReviewValidation.ErrorMessages.ARTICLE_ID_POSITIVE
+import pet.articles.web.validation.ReviewValidation.ErrorMessages.AUTHOR_ID_POSITIVE
+import pet.articles.web.validation.ReviewValidation.ErrorMessages.CONTENT_SIZE
 import pet.articles.web.validation.ReviewValidation.Fields.Constraints.ARTICLE_ID_MIN_VALUE
 import pet.articles.web.validation.ReviewValidation.Fields.Constraints.AUTHOR_ID_MIN_VALUE
 import pet.articles.web.validation.ReviewValidation.Fields.Constraints.CONTENT_MAX_LENGTH
@@ -49,19 +52,19 @@ fun ReviewPayload.validate(): ValidationResult {
 
 private fun validateContent(content: String, reasons: MutableList<String>) {
     if (content.length !in CONTENT_MIN_LENGTH..CONTENT_MAX_LENGTH) {
-        reasons.add("${CONTENT}:${ReviewValidation.ErrorMessages.CONTENT_SIZE}")
+        reasons.add("${CONTENT}:${CONTENT_SIZE}")
     }
 }
 
 private fun validateAuthorId(authorId: Int, reasons: MutableList<String>) {
     if (authorId < AUTHOR_ID_MIN_VALUE) {
-        reasons.add("${AUTHOR_ID}:${ReviewValidation.ErrorMessages.AUTHOR_ID_POSITIVE}")
+        reasons.add("${AUTHOR_ID}:${AUTHOR_ID_POSITIVE}")
     }
 }
 
 private fun validateArticleId(articleId: Int, reasons: MutableList<String>) {
     if (articleId < ARTICLE_ID_MIN_VALUE) {
-        reasons.add("${ARTICLE_ID}:${ReviewValidation.ErrorMessages.ARTICLE_ID_POSITIVE}")
+        reasons.add("${ARTICLE_ID}:${ARTICLE_ID_POSITIVE}")
     }
 }
 

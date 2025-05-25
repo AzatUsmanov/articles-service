@@ -4,7 +4,6 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.extension.ExtendWith
 
 import org.koin.core.qualifier.named
@@ -17,9 +16,8 @@ import pet.articles.model.dto.User
 import pet.articles.model.dto.payload.ReviewPayload
 import pet.articles.model.enums.ErrorResponseType
 import pet.articles.model.enums.UserRole
-import pet.articles.service.ReviewService
+import pet.articles.service.review.ReviewService
 import pet.articles.tool.testing.extension.KoinConfigureTestExtension
-import pet.articles.tool.db.DBCleaner
 import pet.articles.tool.extension.getProperty
 import pet.articles.tool.extension.isMatches
 import pet.articles.tool.extension.toReviewPayload

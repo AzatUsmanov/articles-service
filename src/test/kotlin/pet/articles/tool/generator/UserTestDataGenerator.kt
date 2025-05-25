@@ -1,13 +1,10 @@
 package pet.articles.tool.generator
 
 import net.datafaker.Faker
-import org.koin.core.annotation.Named
-
-import org.koin.core.annotation.Single
 
 import pet.articles.model.dto.User
 import pet.articles.model.enums.UserRole
-import pet.articles.service.UserService
+import pet.articles.service.user.UserService
 import pet.articles.tool.extension.generateRandom
 import pet.articles.web.validation.UserPayloadValidation.Fields.Constrains.EMAIL_MAX_LENGTH
 import pet.articles.web.validation.UserPayloadValidation.Fields.Constrains.PASSWORD_MAX_LENGTH

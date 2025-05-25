@@ -9,7 +9,7 @@ import org.koin.ktor.ext.getProperty
 import org.koin.ktor.ext.inject
 import pet.articles.model.dto.User
 import pet.articles.model.dto.payload.RegistrationPayload
-import pet.articles.service.RegistrationService
+import pet.articles.service.user.RegistrationService
 
 fun Application.registrationRouting() {
     val path: String = getProperty("api.paths.registration")!!

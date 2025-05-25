@@ -12,7 +12,7 @@ import org.koin.test.inject
 import pet.articles.model.dto.User
 import pet.articles.model.dto.AuthResponse
 import pet.articles.model.enums.UserRole
-import pet.articles.service.AuthService
+import pet.articles.service.user.AuthService
 import pet.articles.tool.extension.toAuthRequest
 import pet.articles.tool.producer.AuthenticationDetailsProducer
 

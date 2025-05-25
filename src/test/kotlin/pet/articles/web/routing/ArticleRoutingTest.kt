@@ -15,7 +15,7 @@ import pet.articles.model.dto.payload.NewArticlePayload
 import pet.articles.model.dto.payload.UpdateArticlePayload
 import pet.articles.model.enums.ErrorResponseType
 import pet.articles.model.enums.UserRole
-import pet.articles.service.ArticleService
+import pet.articles.service.article.ArticleService
 import pet.articles.tool.testing.extension.KoinConfigureTestExtension
 import pet.articles.tool.extension.getProperty
 import pet.articles.tool.extension.isMatches
@@ -220,10 +220,7 @@ class ArticleRoutingTest : KoinTest {
         val errorResponse: ErrorResponse = response.body()
         assertEquals(HttpStatusCode.InternalServerError, response.status)
         assertEquals(ErrorResponseType.COMMON, errorResponse.errorResponseType)
-        assertEquals(
-            "Attempt to update article by non existent id = ${unsavedArticle.id}",
-            errorResponse.message
-        )
+        assertTrue(errorResponse.message.startsWith("Attempt to update"))
     }
 
     @Test

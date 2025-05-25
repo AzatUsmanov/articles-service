@@ -1,8 +1,9 @@
-package pet.articles.repository
+package pet.articles.service.review
 
 import pet.articles.model.dto.Review
+import pet.articles.service.CrudService
 
-interface ReviewRepository : CrudRepository<Review> {
+interface ReviewService : CrudService<Review> {
 
     fun findByAuthorId(authorId: Int): List<Review>
 

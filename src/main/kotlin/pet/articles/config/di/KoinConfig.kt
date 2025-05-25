@@ -8,9 +8,11 @@ import org.jooq.Record
 import org.jooq.RecordMapper
 import org.jooq.RecordUnmapper
 import org.koin.core.KoinApplication
+import org.koin.core.logger.Level
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.fileProperties
+import org.koin.logger.SLF4JLogger
 import pet.articles.config.DataSourceConfig
 import pet.articles.config.FlywayConfig
 import pet.articles.config.JWTVerifierConfig
@@ -23,25 +25,26 @@ import pet.articles.model.dto.Article
 import pet.articles.model.dto.AuthorshipOfArticle
 import pet.articles.model.dto.Review
 import pet.articles.model.dto.User
-import pet.articles.repository.ArticleRepository
-import pet.articles.repository.ArticleRepositoryImpl
-import pet.articles.repository.AuthorshipOfArticleRepository
-import pet.articles.repository.AuthorshipOfArticleRepositoryImpl
-import pet.articles.repository.ReviewRepository
-import pet.articles.repository.ReviewRepositoryImpl
-import pet.articles.repository.UserRepository
-import pet.articles.repository.UserRepositoryImpl
-import pet.articles.service.ArticleService
-import pet.articles.service.ArticleServiceImpl
-import pet.articles.service.AuthService
-import pet.articles.service.AuthServiceImpl
-import pet.articles.service.RegistrationService
-import pet.articles.service.RegistrationServiceImpl
-import pet.articles.service.ReviewService
-import pet.articles.service.ReviewServiceImpl
-import pet.articles.service.UserService
-import pet.articles.service.UserServiceImpl
-import pet.articles.tool.extension.getProperty
+import pet.articles.repository.article.ArticleRepository
+import pet.articles.repository.article.ArticleRepositoryImpl
+import pet.articles.repository.authorship.AuthorshipOfArticleRepository
+import pet.articles.repository.authorship.AuthorshipOfArticleRepositoryImpl
+import pet.articles.repository.review.ReviewRepository
+import pet.articles.repository.review.ReviewRepositoryImpl
+import pet.articles.repository.user.UserRepository
+import pet.articles.repository.user.UserRepositoryImpl
+import pet.articles.service.article.ArticleService
+import pet.articles.service.article.ArticleServiceImpl
+import pet.articles.service.user.AuthService
+import pet.articles.service.user.AuthServiceImpl
+import pet.articles.service.user.RegistrationService
+import pet.articles.service.user.RegistrationServiceImpl
+import pet.articles.service.review.ReviewService
+import pet.articles.service.review.ReviewServiceImpl
+import pet.articles.service.user.UserExistenceChecker
+import pet.articles.service.user.UserExistenceCheckerImpl
+import pet.articles.service.user.UserService
+import pet.articles.service.user.UserServiceImpl
 import pet.articles.tool.jooq.mapper.ArticleRecordMapper
 import pet.articles.tool.jooq.mapper.ReviewRecordMapper
 import pet.articles.tool.jooq.mapper.UserRecordMapper
@@ -49,10 +52,12 @@ import pet.articles.tool.jooq.unmapper.ArticleRecordUnmapper
 import pet.articles.tool.jooq.unmapper.AuthorshipRecordUnmapper
 import pet.articles.tool.jooq.unmapper.ReviewRecordUnmapper
 import pet.articles.tool.jooq.unmapper.UserRecordUnmapper
+import pet.articles.tool.validator.UniquenessValidator
+import pet.articles.tool.validator.UserUniquenessValidator
 import javax.sql.DataSource
 
 fun KoinApplication.configure() {
-    printLogger()
+    logger(SLF4JLogger(level = Level.INFO))
     fileProperties()
     modules(
         configModule,
@@ -121,6 +126,11 @@ val toolModule = module {
     single<RecordUnmapper<AuthorshipOfArticle, AuthorshipOfArticlesRecord>>(named("AuthorshipRecordUnmapper")) {
         AuthorshipRecordUnmapper()
     }
+
+    single<UniquenessValidator<User>>(named("UserUniquenessValidator")) {
+        UserUniquenessValidator(get())
+    }
+
 }
 
 val repositoryModule = module {
@@ -154,9 +164,10 @@ val repositoryModule = module {
 }
 
 val serviceModule = module {
-    single<UserService> { UserServiceImpl(get(), get()) }
-    single<ArticleService> { ArticleServiceImpl(get(), get()) }
-    single<ReviewService> { ReviewServiceImpl(get()) }
+    single<UserExistenceChecker> { UserExistenceCheckerImpl(get()) }
+    single<UserService> { UserServiceImpl(get(), get(), get(), get(named("UserUniquenessValidator")),logger) }
+    single<ArticleService> { ArticleServiceImpl(get(), get(), logger) }
+    single<ReviewService> { ReviewServiceImpl(get(), logger) }
     single<RegistrationService> { RegistrationServiceImpl(get(), getProperty("bcrypt.salt")) }
     single<AuthService> {
         AuthServiceImpl(

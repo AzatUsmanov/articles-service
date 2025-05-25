@@ -10,8 +10,8 @@ import org.koin.ktor.ext.getProperty
 import org.koin.ktor.ext.inject
 import pet.articles.model.dto.Review
 import pet.articles.model.dto.payload.ReviewPayload
-import pet.articles.service.ReviewService
-import pet.articles.web.auth.getIdParam
+import pet.articles.service.review.ReviewService
+import pet.articles.tool.extension.getIdParam
 import pet.articles.web.auth.plugin.withEditPermission
 import pet.articles.web.auth.receiveReviewAuthorIdsFromBody
 

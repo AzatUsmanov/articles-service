@@ -38,7 +38,7 @@ dependencies {
 	implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
 	testImplementation("io.insert-koin:koin-test:$koinVersion")
 	testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
-
+	implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 	//ktor
 	implementation("io.ktor:ktor-server-double-receive:$ktorVersion")
 	implementation("io.ktor:ktor-server-auth:$ktorVersion")

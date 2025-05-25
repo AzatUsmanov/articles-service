@@ -1,4 +1,4 @@
-package pet.articles.service
+package pet.articles.service.user
 
 import pet.articles.model.dto.User
 

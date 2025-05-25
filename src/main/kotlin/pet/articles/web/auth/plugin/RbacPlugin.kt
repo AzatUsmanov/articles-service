@@ -5,7 +5,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.routing.*
 import pet.articles.model.enums.AuthClaim
-import pet.articles.web.auth.get
+import pet.articles.tool.extension.get
 
 import pet.articles.model.enums.UserRole
 import pet.articles.tool.exception.AccessDeniedException

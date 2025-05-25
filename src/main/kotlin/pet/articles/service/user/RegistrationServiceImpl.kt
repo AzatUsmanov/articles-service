@@ -1,6 +1,4 @@
-package pet.articles.service
-
-import org.koin.core.annotation.Single
+package pet.articles.service.user
 
 import org.mindrot.jbcrypt.BCrypt
 

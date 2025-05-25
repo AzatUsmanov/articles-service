@@ -2,22 +2,16 @@ package pet.articles.service
 
 import org.junit.jupiter.api.Assertions.assertThrows
 import com.auth0.jwt.interfaces.JWTVerifier
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.extension.RegisterExtension
-import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import org.koin.test.junit5.KoinTestExtension
 
 import pet.articles.model.dto.User
 import pet.articles.model.dto.payload.AuthRequest
 import pet.articles.model.dto.AuthResponse
-import pet.articles.service.AuthService
-import pet.articles.config.testConfigure
-import pet.articles.tool.db.DBCleaner
+import pet.articles.service.user.AuthService
 import pet.articles.tool.extension.toAuthRequest
 import pet.articles.tool.generator.TestDataGenerator
 import pet.articles.tool.producer.AuthenticationDetailsProducer

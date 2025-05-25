@@ -5,8 +5,9 @@ import io.ktor.server.request.*
 import org.koin.ktor.ext.inject
 import pet.articles.model.dto.payload.NewArticlePayload
 import pet.articles.model.dto.payload.ReviewPayload
-import pet.articles.service.ReviewService
-import pet.articles.service.UserService
+import pet.articles.service.review.ReviewService
+import pet.articles.service.user.UserService
+import pet.articles.tool.extension.getIdParam
 
 fun ApplicationCall.receiveUserOwnerIdsFromPath(): List<Int> =
     listOf(getIdParam())

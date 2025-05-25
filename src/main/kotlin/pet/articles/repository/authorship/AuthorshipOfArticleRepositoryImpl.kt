@@ -1,8 +1,7 @@
-package pet.articles.repository
+package pet.articles.repository.authorship
 
 import org.jooq.DSLContext
 import org.jooq.exception.DataAccessException
-import org.koin.core.annotation.Single
 
 import pet.articles.generated.jooq.tables.references.AUTHORSHIP_OF_ARTICLES
 import pet.articles.model.dto.AuthorshipOfArticle

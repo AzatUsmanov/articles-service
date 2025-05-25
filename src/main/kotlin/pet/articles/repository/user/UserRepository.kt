@@ -1,7 +1,8 @@
-package pet.articles.repository
+package pet.articles.repository.user
 
 
 import pet.articles.model.dto.User
+import pet.articles.repository.CrudRepository
 
 
 interface UserRepository : CrudRepository<User> {

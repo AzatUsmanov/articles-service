@@ -1,4 +1,4 @@
-package pet.articles.web.auth
+package pet.articles.tool.extension
 
 import io.ktor.server.auth.jwt.*
 import pet.articles.model.enums.AuthClaim

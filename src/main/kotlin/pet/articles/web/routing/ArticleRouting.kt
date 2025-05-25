@@ -11,8 +11,8 @@ import org.koin.ktor.ext.inject
 import pet.articles.model.dto.Article
 import pet.articles.model.dto.payload.NewArticlePayload
 import pet.articles.model.dto.payload.UpdateArticlePayload
-import pet.articles.service.ArticleService
-import pet.articles.web.auth.getIdParam
+import pet.articles.service.article.ArticleService
+import pet.articles.tool.extension.getIdParam
 import pet.articles.web.auth.plugin.withEditPermission
 import pet.articles.web.auth.receiveArticleAuthorIdsFromBody
 

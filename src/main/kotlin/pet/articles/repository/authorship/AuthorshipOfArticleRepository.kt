@@ -1,4 +1,4 @@
-package pet.articles.repository
+package pet.articles.repository.authorship
 
 import pet.articles.model.dto.AuthorshipOfArticle
 

@@ -3,7 +3,7 @@ package pet.articles.tool.producer
 
 import pet.articles.model.dto.User
 import pet.articles.model.enums.UserRole
-import pet.articles.service.RegistrationService
+import pet.articles.service.user.RegistrationService
 import pet.articles.tool.generator.TestDataGenerator
 
 class AuthenticationDetailsProducerImpl(

@@ -1,4 +1,4 @@
-package pet.articles.service
+package pet.articles.service.user
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -10,7 +10,6 @@ import pet.articles.model.enums.AuthClaim
 import pet.articles.tool.exception.BadCredentialsException
 import pet.articles.tool.exception.UsernameNotFoundException
 import java.util.Date
-import javax.security.sasl.AuthenticationException
 
 class AuthServiceImpl(
     private val userService: UserService,

@@ -1,4 +1,4 @@
-package pet.articles.repository
+package pet.articles.repository.user
 
 import org.jooq.DSLContext
 import org.jooq.RecordMapper
@@ -9,6 +9,7 @@ import org.jooq.exception.DataAccessException
 import pet.articles.generated.jooq.tables.records.UsersRecord
 import pet.articles.generated.jooq.tables.references.USERS
 import pet.articles.model.dto.User
+import pet.articles.repository.CrudJooqRepository
 
 class UserRepositoryImpl(
     private val dsl: DSLContext,

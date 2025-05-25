@@ -1,15 +1,12 @@
 package pet.articles.tool.generator
 
 import net.datafaker.Faker
-import org.koin.core.annotation.Named
-
-import org.koin.core.annotation.Single
 
 import pet.articles.model.dto.Article
 import pet.articles.model.dto.Review
 import pet.articles.model.dto.User
 import pet.articles.model.enums.ReviewType
-import pet.articles.service.ReviewService
+import pet.articles.service.review.ReviewService
 import pet.articles.tool.extension.generateRandom
 import pet.articles.web.validation.ReviewValidation.Fields.Constraints.CONTENT_MAX_LENGTH
 

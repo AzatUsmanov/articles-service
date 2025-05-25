@@ -11,8 +11,8 @@ import org.koin.ktor.ext.inject
 import pet.articles.model.dto.User
 import pet.articles.model.dto.payload.UserPayload
 import pet.articles.model.enums.UserRole
-import pet.articles.service.UserService
-import pet.articles.web.auth.getIdParam
+import pet.articles.service.user.UserService
+import pet.articles.tool.extension.getIdParam
 import pet.articles.web.auth.plugin.withEditPermission
 import pet.articles.web.auth.plugin.withRole
 import pet.articles.web.auth.receiveUserOwnerIdsFromPath

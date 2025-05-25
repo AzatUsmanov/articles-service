@@ -1,4 +1,4 @@
-package pet.articles.repository
+package pet.articles.repository.review
 
 import org.jooq.DSLContext
 import org.jooq.RecordMapper
@@ -6,16 +6,10 @@ import org.jooq.RecordUnmapper
 import org.jooq.Record
 import org.jooq.exception.DataAccessException
 
-import org.koin.core.annotation.Single
-import pet.articles.generated.jooq.tables.Users
-
 import pet.articles.generated.jooq.tables.records.ReviewsRecord
-import pet.articles.generated.jooq.tables.records.UsersRecord
 import pet.articles.generated.jooq.tables.references.REVIEWS
-import pet.articles.generated.jooq.tables.references.USERS
 import pet.articles.model.dto.Review
-import pet.articles.model.dto.User
-import pet.articles.tool.extension.toUnit
+import pet.articles.repository.CrudJooqRepository
 
 class ReviewRepositoryImpl(
     private val dsl: DSLContext,

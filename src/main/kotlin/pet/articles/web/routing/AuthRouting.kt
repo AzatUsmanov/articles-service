@@ -9,7 +9,7 @@ import org.koin.ktor.ext.getProperty
 import org.koin.ktor.ext.inject
 import pet.articles.model.dto.payload.AuthRequest
 import pet.articles.model.dto.AuthResponse
-import pet.articles.service.AuthService
+import pet.articles.service.user.AuthService
 
 fun Application.authRouting() {
     val path: String = getProperty("api.paths.auth")!!

@@ -1,7 +1,5 @@
 package pet.articles.web.config
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.JWTVerifier
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -9,7 +7,7 @@ import io.ktor.server.auth.jwt.*
 import org.koin.ktor.ext.getProperty
 import org.koin.ktor.ext.inject
 import pet.articles.model.enums.AuthClaim
-import pet.articles.service.UserService
+import pet.articles.service.user.UserService
 import pet.articles.tool.exception.AuthenticationException
 
 fun Application.configureAuth() {
