@@ -17,18 +17,20 @@ import pet.articles.web.auth.receiveReviewAuthorIdsFromBody
 
 fun Application.reviewRouting() {
     val path: String = getProperty("api.paths.reviews")!!
-    val service: ReviewService by inject()
+    val reviewService: ReviewService by inject()
 
     routing {
         authenticate("auth-jwt") {
             route(path) {
-                findReviewByIdRoute(service)
-                findReviewsByArticleIdRoute(service)
-                findReviewsByAuthorIdRoute(service)
+                findReviewByIdRoute(reviewService)
+                findReviewsByArticleIdRoute(reviewService)
+                findReviewsByAuthorIdRoute(reviewService)
 
-                withEditPermission(ApplicationCall::receiveReviewAuthorIdsFromBody) {
-                    createReviewRoute(service)
-                    deleteReviewByIdRoute(service)
+                withEditPermission(
+                    ApplicationCall::receiveReviewAuthorIdsFromBody
+                ) {
+                    createReviewRoute(reviewService)
+                    deleteReviewByIdRoute(reviewService)
                 }
             }
         }

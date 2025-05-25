@@ -4,6 +4,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.koin.core.qualifier.named
 import org.koin.test.KoinTest
@@ -16,6 +17,7 @@ import pet.articles.model.dto.payload.UpdateArticlePayload
 import pet.articles.model.enums.ErrorResponseType
 import pet.articles.model.enums.UserRole
 import pet.articles.service.article.ArticleService
+import pet.articles.tool.exception.DuplicateUserException
 import pet.articles.tool.testing.extension.KoinConfigureTestExtension
 import pet.articles.tool.extension.getProperty
 import pet.articles.tool.extension.isMatches
@@ -26,6 +28,7 @@ import pet.articles.web.testApplicationAsAuthorized
 import pet.articles.web.testApplicationAsUnauthorized
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 

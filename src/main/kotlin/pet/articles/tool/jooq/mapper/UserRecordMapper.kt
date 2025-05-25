@@ -15,7 +15,9 @@ class UserRecordMapper : RecordMapper<Record, User> {
             id = record[USERS.ID],
             username = record[USERS.USERNAME]!!,
             email = record[USERS.EMAIL]!!,
-            role = UserRole.entries[record[USERS.ROLE]!!.toInt()],
-            password = record[USERS.PASSWORD]
+            password = record[USERS.PASSWORD],
+            role = record[USERS.ROLE]!!
+                .toInt()
+                .let { roleIndex -> UserRole.entries[roleIndex] }
         )
 }

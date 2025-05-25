@@ -1,4 +1,4 @@
-package pet.articles.web.config
+package pet.articles.web.setup
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -12,7 +12,7 @@ import pet.articles.tool.extension.toErrorResponse
 
 fun Application.configureExceptionHandling() {
     install(StatusPages) {
-        exception<Exception> { call, cause ->
+        exception<RuntimeException> { call, cause ->
             call.respond(HttpStatusCode.InternalServerError, cause.toErrorResponse())
         }
         exception<AuthenticationException> { call, cause ->

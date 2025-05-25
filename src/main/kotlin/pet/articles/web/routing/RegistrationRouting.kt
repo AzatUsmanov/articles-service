@@ -13,10 +13,10 @@ import pet.articles.service.user.RegistrationService
 
 fun Application.registrationRouting() {
     val path: String = getProperty("api.paths.registration")!!
-    val service: RegistrationService by inject()
+    val registrationService: RegistrationService by inject()
     routing {
         route(path) {
-            registerUserRoute(service)
+            registerUserRoute(registrationService)
         }
     }
 }

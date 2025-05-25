@@ -17,7 +17,9 @@ import pet.articles.tool.extension.toAuthRequest
 import pet.articles.tool.producer.AuthenticationDetailsProducer
 
 
-fun KoinTest.testApplicationAsUnauthorized(block: suspend (HttpClient) -> Unit) = testApplication {
+fun KoinTest.testApplicationAsUnauthorized(
+    block: suspend (HttpClient) -> Unit)
+= testApplication {
     application {
         testModule()
     }

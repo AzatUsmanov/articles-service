@@ -15,43 +15,53 @@ import java.time.LocalDateTime
 class ReviewTestDataGenerator(
     private val reviewService: ReviewService,
     private val userGenerator: TestDataGenerator<User>,
-    private val articleGenerator: TestDataGenerator<Article>,
-    private val faker: Faker = Faker()
-) : TestDataGenerator<Review> {
+    private val articleGenerator: TestDataGenerator<Article>
+) : TestDataGeneratorBaseImpl<Review>(
+    generate = { generate(userGenerator, articleGenerator) },
+    create = reviewService::create,
+    toInvalidState = ::makeInvalid
+) {
 
     companion object {
-        const val REVIEW_FIELD_TOPIC_INVALID_LENGTH= 1000
+        private const val INVALID_CONTENT_LENGTH = 1000
+        private const val CONTENT_PARAGRAPH_SIZE = 1
+        private const val NUM_OF_TEST_USERS = 3
+        private const val NUM_OF_TEST_ARTICLES = 3
 
-        const val NUM_OF_TEST_USERS = 10
-        const val NUM_OF_TEST_REVIEWS = 10
-
-        const val CONTENT_PARAGRAPH_SIZE = 1
-    }
-
-    override fun generateUnsavedData(dataSize: Int): List<Review> {
-        val savedUserIds: List<Int> = userGenerator.generateSavedData(NUM_OF_TEST_USERS)
-            .map(User::id)
-            .map{ it!! }
-        val savedArticleIds: List<Int> = articleGenerator.generateSavedData(NUM_OF_TEST_REVIEWS)
-            .map(Article::id)
-            .map{ it!! }
-
-        return (1..dataSize).map {
-            Review(
+        private fun generate(
+            userGenerator: TestDataGenerator<User>,
+            articleGenerator: TestDataGenerator<Article>,
+            faker: Faker = Faker()
+        ): Review {
+            val savedUserIds: List<Int> = generateSavedUserIds(userGenerator)
+            val savedArticleIds: List<Int> = generateSavedArticleIds(articleGenerator)
+            return Review(
                 id = faker.number().positive(),
                 type = ReviewType.entries.random(),
                 dateOfCreation = LocalDateTime.now(),
-                content = faker.lorem().paragraph(CONTENT_PARAGRAPH_SIZE).take(CONTENT_MAX_LENGTH),
                 authorId = savedUserIds.random(),
-                articleId = savedArticleIds.random()
+                articleId = savedArticleIds.random(),
+                content = faker
+                    .lorem()
+                    .paragraph(CONTENT_PARAGRAPH_SIZE)
+                    .take(CONTENT_MAX_LENGTH)
             )
         }
+
+        private fun makeInvalid(review: Review) = review.copy(
+            content = String.generateRandom(INVALID_CONTENT_LENGTH)
+        )
+
+        private fun generateSavedUserIds(
+            userGenerator: TestDataGenerator<User>
+        ): List<Int> = userGenerator
+            .generateSavedData(NUM_OF_TEST_USERS)
+            .mapNotNull(User::id)
+
+        private fun generateSavedArticleIds(
+            articleGenerator: TestDataGenerator<Article>
+        ): List<Int> = articleGenerator
+            .generateSavedData(NUM_OF_TEST_ARTICLES)
+            .mapNotNull(Article::id)
     }
-
-    override fun generateSavedData(dataSize: Int): List<Review> =
-        generateUnsavedData(dataSize).map(reviewService::create)
-
-    override fun generateInvalidData(): Review = generateUnsavedData().copy(
-        content = String.generateRandom(REVIEW_FIELD_TOPIC_INVALID_LENGTH)
-    )
 }

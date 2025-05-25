@@ -20,23 +20,25 @@ import pet.articles.web.auth.receiveUserOwnerIdsFromPath
 fun Application.userRouting() {
     val path: String = getProperty("api.paths.users")!!
     val adminPath: String = getProperty("api.paths.users.admin")!!
-    val service: UserService by inject()
+    val userService: UserService by inject()
     routing {
         authenticate("auth-jwt") {
             route(path) {
-                findUserByIdRoute(service)
-                findAllUsersRoute(service)
-                findAuthorsByArticleIdRoute(service)
+                findUserByIdRoute(userService)
+                findAllUsersRoute(userService)
+                findAuthorsByArticleIdRoute(userService)
             }
             route("$path/{id}") {
-                withEditPermission(ApplicationCall::receiveUserOwnerIdsFromPath) {
-                    updateUserByIdRoute(service)
-                    deleteUserByIdRoute(service)
+                withEditPermission(
+                    ApplicationCall::receiveUserOwnerIdsFromPath
+                ) {
+                    updateUserByIdRoute(userService)
+                    deleteUserByIdRoute(userService)
                 }
             }
             route(adminPath) {
                 withRole(UserRole.ROLE_ADMIN) {
-                    createUserRoute(service)
+                    createUserRoute(userService)
                 }
             }
         }
@@ -54,7 +56,10 @@ fun Route.updateUserByIdRoute(service: UserService) =
     patch {
         val id: Int = call.getIdParam()
         val payloadForUpdate: UserPayload = call.receive()
-        val updatedUser: User = service.updateById(payloadForUpdate.toUser(), id)
+        val updatedUser: User = service.updateById(
+            payloadForUpdate.toUser(),
+            id
+        )
         call.respond(HttpStatusCode.OK, updatedUser)
     }
 

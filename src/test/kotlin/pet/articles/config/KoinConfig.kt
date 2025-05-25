@@ -5,7 +5,6 @@ import org.jooq.SQLDialect
 import org.koin.core.KoinApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import pet.articles.config.JooqConfig
 import pet.articles.config.di.configure
 import pet.articles.model.dto.Article
 import pet.articles.model.dto.Review
@@ -18,13 +17,13 @@ import pet.articles.model.dto.payload.UserPayload
 import pet.articles.tool.db.DBCleaner
 import pet.articles.tool.db.DBCleanerImpl
 import pet.articles.tool.generator.ArticleTestDataGenerator
-import pet.articles.tool.generator.NewArticlePayloadTestDataGenerator
-import pet.articles.tool.generator.RegistrationPayloadTestDataGenerator
-import pet.articles.tool.generator.ReviewPayloadTestDataGenerator
+import pet.articles.tool.generator.payload.NewArticlePayloadTestDataGenerator
+import pet.articles.tool.generator.payload.RegistrationPayloadTestDataGenerator
+import pet.articles.tool.generator.payload.ReviewPayloadTestDataGenerator
 import pet.articles.tool.generator.ReviewTestDataGenerator
 import pet.articles.tool.generator.TestDataGenerator
-import pet.articles.tool.generator.UpdateArticlePayloadTestDataGenerator
-import pet.articles.tool.generator.UserPayloadTestDataGenerator
+import pet.articles.tool.generator.payload.UpdateArticlePayloadTestDataGenerator
+import pet.articles.tool.generator.payload.UserPayloadTestDataGenerator
 import pet.articles.tool.generator.UserTestDataGenerator
 import pet.articles.tool.producer.AuthenticationDetailsProducer
 import pet.articles.tool.producer.AuthenticationDetailsProducerImpl

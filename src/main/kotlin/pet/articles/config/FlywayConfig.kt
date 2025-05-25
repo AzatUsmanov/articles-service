@@ -18,5 +18,6 @@ class FlywayConfig {
         .dataSource(dataSource)
         .load()
 
-    fun migrate(flyway: Flyway): MigrateResult = flyway.migrate()
+    fun migrate(flyway: Flyway): MigrateResult =
+        flyway.migrate()
 }

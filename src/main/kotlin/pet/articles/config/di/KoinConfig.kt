@@ -95,7 +95,7 @@ val configModule = module {
         )
     }
     single<JWTVerifier> {
-        JWTVerifierConfig().buildVerifier(
+        JWTVerifierConfig().verifier(
             secret = getProperty("jwt.secret"),
             issuer = getProperty("jwt.issuer"),
             audience = getProperty("jwt.audience")

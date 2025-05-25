@@ -14,10 +14,12 @@ class ReviewRecordMapper : RecordMapper<Record, Review> {
     override fun map(record: Record): Review =
         Review(
             id = record[REVIEWS.ID],
-            type = ReviewType.entries[record[REVIEWS.TYPE]!!.toInt()],
             dateOfCreation = record[REVIEWS.DATE_OF_CREATION]!!,
             content = record[REVIEWS.CONTENT]!!,
             authorId = record[REVIEWS.AUTHOR_ID],
-            articleId = record[REVIEWS.ARTICLE_ID]!!
+            articleId = record[REVIEWS.ARTICLE_ID]!!,
+            type = record[REVIEWS.TYPE]!!
+                .toInt()
+                .let { typeIndex -> ReviewType.entries[typeIndex] }
         )
 }

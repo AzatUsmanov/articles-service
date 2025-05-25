@@ -6,7 +6,7 @@ import com.auth0.jwt.interfaces.JWTVerifier
 
 class JWTVerifierConfig {
 
-    fun buildVerifier(
+    fun verifier(
         secret: String,
         audience: String,
         issuer: String

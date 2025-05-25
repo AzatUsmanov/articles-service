@@ -1,4 +1,4 @@
-package pet.articles.web.config
+package pet.articles.web.setup
 
 import com.auth0.jwt.interfaces.JWTVerifier
 import io.ktor.server.application.*

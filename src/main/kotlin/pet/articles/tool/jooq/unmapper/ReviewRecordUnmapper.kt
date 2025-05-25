@@ -12,10 +12,10 @@ class ReviewRecordUnmapper : RecordUnmapper<Review, ReviewsRecord> {
     override fun unmap(source: Review?): ReviewsRecord =
         ReviewsRecord(
             id = source!!.id,
-            type = source.type.ordinal.toShort(),
             dateOfCreation = source.dateOfCreation,
             content = source.content,
             articleId = source.articleId,
-            authorId = source.authorId
+            authorId = source.authorId,
+            type = source.type.ordinal.toShort()
         )
 }

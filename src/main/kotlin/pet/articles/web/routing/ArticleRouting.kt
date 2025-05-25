@@ -18,18 +18,20 @@ import pet.articles.web.auth.receiveArticleAuthorIdsFromBody
 
 fun Application.articleRouting() {
     val path: String = getProperty("api.paths.articles")!!
-    val service: ArticleService by inject()
+    val articleService: ArticleService by inject()
     routing {
         authenticate("auth-jwt") {
             route(path) {
-                findArticleByIdRoute(service)
-                findAllArticlesRoute(service)
-                findArticlesByAuthorIdRoute(service)
+                findArticleByIdRoute(articleService)
+                findAllArticlesRoute(articleService)
+                findArticlesByAuthorIdRoute(articleService)
 
-                withEditPermission(ApplicationCall::receiveArticleAuthorIdsFromBody) {
-                    createArticleRoute(service)
-                    updateArticleByIdRoute(service)
-                    deleteArticleByIdRoute(service)
+                withEditPermission(
+                    ApplicationCall::receiveArticleAuthorIdsFromBody
+                ) {
+                    createArticleRoute(articleService)
+                    updateArticleByIdRoute(articleService)
+                    deleteArticleByIdRoute(articleService)
                 }
             }
         }
@@ -50,7 +52,10 @@ fun Route.updateArticleByIdRoute(service: ArticleService) =
     patch("/{id}") {
         val id: Int = call.getIdParam()
         val payloadForUpdate: UpdateArticlePayload = call.receive()
-        val updatedArticle: Article = service.updateById(payloadForUpdate.toArticle(), id)
+        val updatedArticle: Article = service.updateById(
+            payloadForUpdate.toArticle(),
+            id
+        )
         call.respond(HttpStatusCode.OK, updatedArticle)
     }
 

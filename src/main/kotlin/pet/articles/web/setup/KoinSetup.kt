@@ -1,4 +1,4 @@
-package pet.articles.web.config
+package pet.articles.web.setup
 
 import io.ktor.server.application.*
 import org.koin.ktor.plugin.Koin

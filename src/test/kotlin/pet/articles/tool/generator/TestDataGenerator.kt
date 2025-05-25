@@ -12,7 +12,9 @@ interface TestDataGenerator<T> {
 
     fun generateUnsavedData(dataSize: Int): List<T>
 
-    fun generateSavedData(): T = generateSavedData(SIZE_OF_ONE_ELEMENT_LIST).first()
+    fun generateSavedData(): T =
+        generateSavedData(SIZE_OF_ONE_ELEMENT_LIST).first()
 
-    fun generateUnsavedData(): T = generateUnsavedData(SIZE_OF_ONE_ELEMENT_LIST).first()
+    fun generateUnsavedData(): T =
+        generateUnsavedData(SIZE_OF_ONE_ELEMENT_LIST).first()
 }

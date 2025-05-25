@@ -13,10 +13,10 @@ import pet.articles.service.user.AuthService
 
 fun Application.authRouting() {
     val path: String = getProperty("api.paths.auth")!!
-    val service: AuthService by inject()
+    val authService: AuthService by inject()
     routing {
         route(path) {
-            authenticateRoute(service)
+            authenticateRoute(authService)
         }
     }
 }

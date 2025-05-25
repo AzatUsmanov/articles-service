@@ -12,31 +12,34 @@ import pet.articles.web.validation.UserPayloadValidation.Fields.Constrains.PASSW
 import pet.articles.web.validation.UserPayloadValidation.Fields.Constrains.USERNAME_MAX_LENGTH
 
 class UserTestDataGenerator(
-    private val userService: UserService,
-    private val faker: Faker = Faker()
-) : TestDataGenerator<User> {
+    private val userService: UserService
+) : TestDataGeneratorBaseImpl<User>(
+    generate = ::generate,
+    create = userService::create,
+    toInvalidState = ::makeInvalid
+) {
 
     companion object {
-        const val USER_FIELD_USERNAME_INVALID_LENGTH= 1000
-    }
+        private const val USER_FIELD_USERNAME_INVALID_LENGTH= 1000
 
-    override fun generateUnsavedData(dataSize: Int): List<User> =
-        (1..dataSize).map {
+        private fun generate(faker: Faker = Faker()) =
             User(
                 id = faker.number().positive(),
-                username = faker.name().fullName().take(USERNAME_MAX_LENGTH),
-                email = faker.internet().emailAddress().take(EMAIL_MAX_LENGTH),
                 role = UserRole.entries.random(),
-                password = faker.internet().password(PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH)
+                username = faker
+                    .name()
+                    .fullName()
+                    .take(USERNAME_MAX_LENGTH),
+                email = faker
+                    .internet()
+                    .emailAddress()
+                    .take(EMAIL_MAX_LENGTH),
+                password = faker
+                    .internet()
+                    .password(PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH)
             )
-        }
 
-    override fun generateSavedData(dataSize: Int): List<User> {
-        val a = generateUnsavedData(dataSize)
-            return a.map(userService::create)
+        private fun makeInvalid(user: User) =
+            user.copy(username = String.generateRandom(USER_FIELD_USERNAME_INVALID_LENGTH))
     }
-
-    override fun generateInvalidData(): User = generateUnsavedData().copy(
-        username = String.generateRandom(USER_FIELD_USERNAME_INVALID_LENGTH)
-    )
 }

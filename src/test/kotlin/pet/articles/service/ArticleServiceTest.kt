@@ -43,8 +43,6 @@ class ArticleServiceTest : KoinTest {
 
     @Test
     fun createArticle() {
-        val a = articleGenerator
-
         val articleForSave: Article = articleGenerator.generateUnsavedData()
         val savedAuthors: List<User> = userGenerator.generateSavedData(NUM_OF_TEST_ARTICLES)
         val authorIds: List<Int> = savedAuthors.map { it.id!! }
